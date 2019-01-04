@@ -47,42 +47,40 @@ public class Game2048 extends GameApplication {
         initBackground();
 
 
-
-
-
-
     }
+
+
+    protected void onUpdate(){
+        System.out.println(getGameState().getInt("currentScoreValue"));
+        if (getGameState().getInt("highestScoreValue")> 100){
+            System.out.println("NY REKORD!");
+        }
+
+        if (getGameState().getInt("currentScoreValue") > getGameState().getInt("highestScoreValue")){
+
+            getGameState().setValue("highestScoreValue", 1000);
+
+        }
+    }
+
 
     @Override
     protected void initInput(){
         Input input = getInput();
 
 
-        input.addAction(new UserAction("Move Right") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("highestScoreValue", +5);
-            }
-        }, KeyCode.D);
-
-        input.addAction(new UserAction("Move Left") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("highestScoreValue", +5);
-            }
-        }, KeyCode.A);
-
         input.addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
-                getGameState().increment("highestScoreValue", +5);
+                getGameState().increment("currentScoreValue", +5);
+
             }
         }, KeyCode.W);
 
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
-                getGameState().increment("highestScoreValue", +5);
+                getGameState().increment("currentScoreValue", -5);
             }
         }, KeyCode.S);
 
