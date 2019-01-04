@@ -7,14 +7,11 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import org.w3c.dom.css.Rect;
 
 import java.util.Map;
 
@@ -26,7 +23,7 @@ import java.util.Map;
 
 public class Game2048 extends GameApplication {
 
-    private final int CORNER_VALUE = 10;
+    public final static int CORNER_VALUE = 10;
     private Entity player;
 
 
@@ -49,6 +46,8 @@ public class Game2048 extends GameApplication {
     @Override
     protected void initGame(){
         initBackground();
+
+
 
 
     }
@@ -110,95 +109,39 @@ public class Game2048 extends GameApplication {
         /*
             Setup rectangles for the UI
          */
-        Rectangle logoRect = new Rectangle(113, 113, Color.rgb(236, 193, 0));
-        Rectangle currentScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
-        Rectangle highScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
-        Rectangle gameGridBgRect = new Rectangle(315, 315, Color.rgb(158,146, 130));
-        logoRect.setArcHeight(CORNER_VALUE);
-        logoRect.setArcWidth(CORNER_VALUE);
-        currentScoreRect.setArcHeight(CORNER_VALUE);
-        currentScoreRect.setArcWidth(CORNER_VALUE);
-        highScoreRect.setArcHeight(CORNER_VALUE);
-        highScoreRect.setArcWidth(CORNER_VALUE);
-        gameGridBgRect.setArcHeight(CORNER_VALUE);
-        gameGridBgRect.setArcWidth(CORNER_VALUE);
 
-        /*
-            Adding some text to the rectangles
-         */
-        Text logoText = new Text(27, 92, "2048");
-        Text currentScoreText = new Text(165, 42, "SCORE");
-        Text highScoreText = new Text(276,42, "BEST");
+        // Init logo
+        Logo logo = new Logo();
 
-        logoText.setFill(Color.WHITE);
-        logoText.setStyle("-fx-font: 38px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-        currentScoreText.setFill(Color.rgb(225,225,225));
-        currentScoreText.setStyle("-fx-font: 15px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-        highScoreText.setFill(Color.rgb(225,225,225));
-        highScoreText.setStyle("-fx-font: 15px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        // Create new Score object
+        Score score = new Score();
+        // Initialize the currentScore
+        score.initCurrentScore();
+        score.initHighScore();
 
-        // Adding current score value text to UI
-        Text currentScoreValueText = new Text();
-        currentScoreValueText.setTranslateX(165);
-        currentScoreValueText.setTranslateY(68);
-        currentScoreValueText.textProperty().bind(getGameState().intProperty("currentScoreValue").asString());
-        currentScoreValueText.setFill(Color.WHITE);
-        currentScoreValueText.setStyle("-fx-font: 20px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-
-        // Adding highest score value text to UI
-        Text highestScoreValueText = new Text();
-        highestScoreValueText.setTranslateX(276);
-        highestScoreValueText.setTranslateY(68);
-        highestScoreValueText.textProperty().bind(getGameState().intProperty("highestScoreValue").asString());
-        highestScoreValueText.setFill(Color.WHITE);
-        highestScoreValueText.setStyle("-fx-font: 20px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-
-
-
-
-        /*
-            Add the text to the view
-         */
-        getGameScene().addUINode(logoText);
-        getGameScene().addUINode(currentScoreText);
-        getGameScene().addUINode(highScoreText);
-        getGameScene().addUINode(currentScoreValueText);
-        getGameScene().addUINode(highestScoreValueText);
-
-
-        Entity logo = Entities.builder().at(15,25).viewFromNode(logoRect).buildAndAttach(getGameWorld());
-        Entity score = Entities.builder().at(153,25).viewFromNode(highScoreRect).buildAndAttach(getGameWorld());
-        score = Entities.builder().at(256, 25).viewFromNode(currentScoreRect).buildAndAttach(getGameWorld());
-        Entity gameGridBg = Entities.builder().at(22, 218).viewFromNode(gameGridBgRect).buildAndAttach(getGameWorld());
+        new Grid();
 
 
         GridPane grid = new GridPane();
         grid.setMinSize(300,300);
 
-        grid.setPadding(new Insets(10,10,10,10));
-        grid.setGridLinesVisible(true);
+        // Padding around the grid
+        grid.setPadding(new Insets(6,6,6,6));
+        grid.setHgap(6);
+        grid.setVgap(6);
 
-        grid.add(new Text("0"),0,0);
-        grid.add(new Text("1"),1,0);
-        grid.add(new Text("2"),2,0);
-        grid.add(new Text("3"),4,0);
+        /*
+          This nested for-loop is filling out the first columns row, then goes the second column and fills out all of the rows etc..
+          I value is for the X
+          J value is for the Y
+         */
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                grid.add(new Tile().tileBg(),i,j);
+            }
+        }
 
-        grid.add(new Text("0"),0,1);
-        grid.add(new Text("1"),1,1);
-        grid.add(new Text("2"),2,1);
-        grid.add(new Text("3"),4,1);
-
-        grid.add(new Text("0"),0,2);
-        grid.add(new Text("1"),1,2);
-        grid.add(new Text("2"),2,2);
-        grid.add(new Text("3"),4,2);
-
-        grid.add(new Text("0"),0,3);
-        grid.add(new Text("1"),1,3);
-        grid.add(new Text("2"),2,3);
-        grid.add(new Text("3"),4,3);
-
-        Entity gridPane = Entities.builder().at(15,210).viewFromNode(grid).buildAndAttach(getGameWorld());
+        Entity gridPane = Entities.builder().at(22,218).viewFromNode(grid).buildAndAttach(getGameWorld());
 
 
 
