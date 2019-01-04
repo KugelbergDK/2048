@@ -6,7 +6,11 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -162,12 +166,40 @@ public class Game2048 extends GameApplication {
         getGameScene().addUINode(highestScoreValueText);
 
 
-
-
         Entity logo = Entities.builder().at(15,25).viewFromNode(logoRect).buildAndAttach(getGameWorld());
         Entity score = Entities.builder().at(153,25).viewFromNode(highScoreRect).buildAndAttach(getGameWorld());
         score = Entities.builder().at(256, 25).viewFromNode(currentScoreRect).buildAndAttach(getGameWorld());
         Entity gameGridBg = Entities.builder().at(22, 218).viewFromNode(gameGridBgRect).buildAndAttach(getGameWorld());
+
+
+        GridPane grid = new GridPane();
+        grid.setMinSize(300,300);
+
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setGridLinesVisible(true);
+
+        grid.add(new Text("0"),0,0);
+        grid.add(new Text("1"),1,0);
+        grid.add(new Text("2"),2,0);
+        grid.add(new Text("3"),4,0);
+
+        grid.add(new Text("0"),0,1);
+        grid.add(new Text("1"),1,1);
+        grid.add(new Text("2"),2,1);
+        grid.add(new Text("3"),4,1);
+
+        grid.add(new Text("0"),0,2);
+        grid.add(new Text("1"),1,2);
+        grid.add(new Text("2"),2,2);
+        grid.add(new Text("3"),4,2);
+
+        grid.add(new Text("0"),0,3);
+        grid.add(new Text("1"),1,3);
+        grid.add(new Text("2"),2,3);
+        grid.add(new Text("3"),4,3);
+
+        Entity gridPane = Entities.builder().at(15,210).viewFromNode(grid).buildAndAttach(getGameWorld());
+
 
 
     }
