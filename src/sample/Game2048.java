@@ -119,29 +119,7 @@ public class Game2048 extends GameApplication {
         score.initCurrentScore();
         score.initHighScore();
 
-        new Grid();
-
-
-        GridPane grid = new GridPane();
-        grid.setMinSize(300,300);
-
-        // Padding around the grid
-        grid.setPadding(new Insets(6,6,6,6));
-        grid.setHgap(6);
-        grid.setVgap(6);
-
-        /*
-          This nested for-loop is filling out the first columns row, then goes the second column and fills out all of the rows etc..
-          I value is for the X
-          J value is for the Y
-         */
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                grid.add(new Tile().tileBg(),i,j);
-            }
-        }
-
-        Entity gridPane = Entities.builder().at(22,218).viewFromNode(grid).buildAndAttach(getGameWorld());
+        Grid grid = new Grid();
 
 
 
