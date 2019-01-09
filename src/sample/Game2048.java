@@ -25,6 +25,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,11 +39,13 @@ public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
     private Entity tile = new Entity();
+    ArrayList<Tile> tiles = new ArrayList<>();
+
 
 
     /**
      * Initial settings for the game, such as width, height, version and title.
-     * @param settings
+     * @param settings the FXGL game setting
      */
     @Override
     protected void initSettings(GameSettings settings) {
@@ -61,11 +65,36 @@ public class Game2048 extends GameApplication {
 
 
 
+        /* CODE EXAMPLE
+        tiles.add(new Tile(0,0,2));
+        tiles.add(new Tile(1,0,4));
+        tiles.add(new Tile(2,0,8));
+
+        for (Tile tile : tiles){
+            if (tile.getX() == 0){
+                System.out.println("Fandt en på x 0");
+            }
+        }
+        */
+
+
+        tile = Entities.builder().at(22+6,218+6).viewFromNode(new Tile(0,0,2).createTile()).buildAndAttach(getGameWorld());
+        tile = Entities.builder().at(176+6,218+6).viewFromNode(new Tile(0,0,256).createTile()).buildAndAttach(getGameWorld());
+        Tile test = new Tile(0,0,2);
+        spawnTile(test);
+        System.out.println(test.getUICoordinates()[0]);
 
 
 
 
 
+
+    }
+
+    protected Entity spawnTile(Tile tile){
+        // Add tile to arraylist
+        tiles.add(tile);
+        return Entities.builder().at(tile.getX(), tile.getY()).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
     }
 
 
@@ -165,22 +194,8 @@ public class Game2048 extends GameApplication {
         score.initCurrentScore();
         score.initHighScore();
 
+        // Init board
         Board board = new Board();
-
-
-        // Here comes the tile array
-        ArrayList<Tile> tiles = new ArrayList<>();
-
-
-        // Here comes the coordinate system
-
-
-        tile = Entities.builder().at(22+6,218+6).viewFromNode(new Tile(0,0,2).createTile()).buildAndAttach(getGameWorld());
-        tile = Entities.builder().at(176+6,218+6).viewFromNode(new Tile(0,0,256).createTile()).buildAndAttach(getGameWorld());
-
-
-        // Built tile and make it collidable
-
 
 
 

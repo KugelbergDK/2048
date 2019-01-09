@@ -22,12 +22,10 @@ public class TileValue{
             {Color.rgb(243,217,107), Color.rgb(255,255,255)},   // Tile with value 128
             {Color.rgb(241,208,75), Color.rgb(255,255,255)},   // Tile with value 256
     };
+
     protected int value;
     protected int fontSize;
 
-    public TileValue(){
-
-    }
 
 
     public int getValue() {

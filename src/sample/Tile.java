@@ -78,30 +78,20 @@ public class Tile{
 
     }
 
-    public Node tileTest(){
-        this.tileBoxRectBg = new Rectangle(71, 71, Color.rgb(255,154, 149));
-        this.tileBoxRectBg.setArcHeight(Game2048.CORNER_VALUE);
-        this.tileBoxRectBg.setArcWidth(Game2048.CORNER_VALUE);
-        return this.tileBoxRectBg;
+    public int[] getUICoordinates(){
+
+        int x = this.x;
+        int y = this.y;
+        int[] uiCoordinates = new int[2];
+
+        if (x == 0 && y == 0) uiCoordinates = new int[]{1, 2};
+
+
+        return uiCoordinates;
 
     }
 
-    public Rectangle getTileBoxRectBg() {
-        return tileBoxRectBg;
-    }
 
-    public void setTileBoxRectBg(Rectangle tileBoxRectBg) {
-        this.tileBoxRectBg = tileBoxRectBg;
-    }
-
-
-    public TileValue getTv() {
-        return tv;
-    }
-
-    public void setTv(TileValue tv) {
-        this.tv = tv;
-    }
 
     public boolean isEmpty() {
         return isEmpty;
