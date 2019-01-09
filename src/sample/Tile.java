@@ -84,7 +84,31 @@ public class Tile{
         int y = this.y;
         int[] uiCoordinates = new int[2];
 
-        if (x == 0 && y == 0) uiCoordinates = new int[]{1, 2};
+        // First row
+        if (x == 0 && y == 0) uiCoordinates = new int[]{29, 224};
+        if (x == 1 && y == 0) uiCoordinates = new int[]{106, 224};
+        if (x == 2 && y == 0) uiCoordinates = new int[]{183, 224};
+        if (x == 3 && y == 0) uiCoordinates = new int[]{260, 224};
+
+        // Second row
+        if (x == 0 && y == 1) uiCoordinates = new int[]{29, 301};
+        if (x == 1 && y == 1) uiCoordinates = new int[]{106, 301};
+        if (x == 2 && y == 1) uiCoordinates = new int[]{183, 301};
+        if (x == 3 && y == 1) uiCoordinates = new int[]{260, 301};
+
+        // Third row
+        if (x == 0 && y == 2) uiCoordinates = new int[]{29, 378};
+        if (x == 1 && y == 2) uiCoordinates = new int[]{106, 378};
+        if (x == 2 && y == 2) uiCoordinates = new int[]{183, 378};
+        if (x == 3 && y == 2) uiCoordinates = new int[]{260, 378};
+
+        // Fourth row
+        if (x == 0 && y == 3) uiCoordinates = new int[]{29, 455};
+        if (x == 1 && y == 3) uiCoordinates = new int[]{106, 455};
+        if (x == 2 && y == 3) uiCoordinates = new int[]{183, 455};
+        if (x == 3 && y == 3) uiCoordinates = new int[]{260, 455};
+
+
 
 
         return uiCoordinates;

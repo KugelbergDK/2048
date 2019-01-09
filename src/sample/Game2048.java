@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -82,7 +83,8 @@ public class Game2048 extends GameApplication {
         tile = Entities.builder().at(176+6,218+6).viewFromNode(new Tile(0,0,256).createTile()).buildAndAttach(getGameWorld());
         Tile test = new Tile(0,0,2);
         spawnTile(test);
-        System.out.println(test.getUICoordinates()[0]);
+
+
 
 
 
@@ -94,7 +96,10 @@ public class Game2048 extends GameApplication {
     protected Entity spawnTile(Tile tile){
         // Add tile to arraylist
         tiles.add(tile);
-        return Entities.builder().at(tile.getX(), tile.getY()).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
+        int tileX = tile.getUICoordinates()[0];
+        int tileY = tile.getUICoordinates()[1];
+        System.out.println("X: "+ tileX);
+        return Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
     }
 
 
@@ -109,6 +114,7 @@ public class Game2048 extends GameApplication {
             @Override
             protected void onAction() {
                 getGameState().increment("currentScoreValue", +5);
+
 
             }
         }, KeyCode.W);
@@ -143,20 +149,21 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 System.out.println("Begin");
-                Tile felt = new Tile(0,0,4);
+                Tile tile = new Tile(1,3,128);
+                Tile tile2 = new Tile(3,2,32);
+                spawnTile(tile);
+                spawnTile(tile2);
 
             }
 
             @Override
             protected void onAction() {
                 super.onAction();
-                System.out.println("On action triggered");
             }
 
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
-                System.out.println("Action ended");
             }
         };
 
