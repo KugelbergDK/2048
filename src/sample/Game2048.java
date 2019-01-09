@@ -1,14 +1,25 @@
 package sample;
 
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -24,7 +35,7 @@ import java.util.Map;
 public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
-    private Entity player;
+    private Entity entity = new Entity();
 
 
     /**
@@ -50,21 +61,13 @@ public class Game2048 extends GameApplication {
 
 
 
+
+
+
+
     }
 
 
-    protected void onUpdate(){
-        System.out.println(getGameState().getInt("currentScoreValue"));
-        if (getGameState().getInt("highestScoreValue")> 100){
-            System.out.println("NY REKORD!");
-        }
-
-        if (getGameState().getInt("currentScoreValue") > getGameState().getInt("highestScoreValue")){
-
-            getGameState().setValue("highestScoreValue", 1000);
-
-        }
-    }
 
 
     @Override
@@ -80,12 +83,58 @@ public class Game2048 extends GameApplication {
             }
         }, KeyCode.W);
 
+        input.addAction(new UserAction("Move Right") {
+            @Override
+            protected void onAction() {
+                getGameState().increment("currentScoreValue", +5);
+
+            }
+        }, KeyCode.D);
+
         input.addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
                 getGameState().increment("currentScoreValue", -5);
             }
         }, KeyCode.S);
+
+        input.addAction(new UserAction("Move Left") {
+            @Override
+            protected void onAction() {
+                getGameState().increment("currentScoreValue", -5);
+            }
+        }, KeyCode.A);
+
+
+
+
+        UserAction reset = new UserAction("reset") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                System.out.println("Begin");
+                Tile felt = new Tile(0,0,4);
+
+            }
+
+            @Override
+            protected void onAction() {
+                super.onAction();
+                System.out.println("On action triggered");
+            }
+
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+                System.out.println("Action ended");
+            }
+        };
+
+        input.addAction(reset, KeyCode.R);
+
+
+
+
 
 
     }
@@ -106,10 +155,6 @@ public class Game2048 extends GameApplication {
     @Override
     protected void initUI(){
 
-        /*
-            Setup rectangles for the UI
-         */
-
         // Init logo
         Logo logo = new Logo();
 
@@ -119,11 +164,26 @@ public class Game2048 extends GameApplication {
         score.initCurrentScore();
         score.initHighScore();
 
-        Grid grid = new Grid();
+        Board board = new Board();
+
+
+
+        /*
+        tile = Entities.builder().at(22,218).viewFromNode(new Tile(0,0,2).tileWithValue()).buildAndAttach(getGameWorld());
+        tile = Entities.builder().at(176,218).viewFromNode(new Tile(0,0,2).tileWithValue()).buildAndAttach(getGameWorld());
+        */
+
+        // Built tile and make it collidable
+
+        entity.addComponent(new Tile(0,0,2));
 
 
 
     }
+
+
+
+
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("currentScoreValue", 0);
