@@ -38,6 +38,10 @@ public class TileValue{
         this.value = value;
     }
 
+    /**
+     *
+     * @return a Color list, where index 0 is the background and index 1 is font color
+     */
     public Color[] getColor(){
 
         // Convert tileValue.value to Color list index so it matchup.
@@ -50,7 +54,34 @@ public class TileValue{
         // Here i can return which index the colors are listed by getting the tile value, for an example, if i want to return the bg and font color with the tile value of 2, then i will get index at 0.
         return tileColors[valueToColorIndex.get(this.getValue())];
 
+    }
+
+
+    /**
+     *
+     * @return The font size for the defined value.
+     */
+    public int getFontSize() {
+        HashMap<Integer, Integer> fontSize = new HashMap<>();
+
+        fontSize.put(2,45);
+        fontSize.put(4,45);
+        fontSize.put(8,45);
+        fontSize.put(16,45);
+        fontSize.put(32,45);
+        fontSize.put(64,45);
+        fontSize.put(128,38);
+        fontSize.put(256,38);
+        fontSize.put(512,38);
+        fontSize.put(1024,28);
+        fontSize.put(2048,28);
+
+        return fontSize.get(this.value);
+
 
     }
 
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+    }
 }

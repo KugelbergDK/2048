@@ -10,9 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import static sample.Game2048.CORNER_VALUE;
 
-public class Tile extends Component{
+public class Tile{
 
     protected Rectangle tileBoxRectBg;
     protected TileValue tv;
@@ -43,9 +42,6 @@ public class Tile extends Component{
         tv = new TileValue();
         tv.setValue(newValue);
         System.out.println("A new tile has been created with a value of: " + tv.getValue());
-        Color bg = tv.getColor()[0];
-        Color font = tv.getColor()[1];
-        System.out.println(bg);
 
         this.x = x;
         this.y = y;
@@ -54,13 +50,21 @@ public class Tile extends Component{
     }
 
     public Node createTile(){
-        Rectangle tile = new Rectangle(71,71, Color.rgb(238,228,218));
-        Text nummer = new Text("2");
+
+        // Get bg and font color from value
+        Rectangle tile = new Rectangle(71,71, tv.getColor()[0]);
+        tile.setArcWidth(Game2048.CORNER_VALUE);
+        tile.setArcHeight(Game2048.CORNER_VALUE);
+
+        Text number = new Text(String.valueOf(tv.getValue()));
+        number.setFill(tv.getColor()[1]);
+        number.setStyle("-fx-font: " + tv.getFontSize() +"px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        number.setTranslateY(-2);
 
         StackPane stack = new StackPane();
-        stack.getChildren().addAll(tile,nummer);
+        stack.getChildren().addAll(tile,number);
 
-        Entity entireTile = Entities.builder().at(15,218).viewFromNode(stack).buildAndAttach(FXGL.getApp().getGameWorld());
+
         return stack;
     }
 

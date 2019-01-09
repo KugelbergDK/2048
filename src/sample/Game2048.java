@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -35,7 +36,7 @@ import java.util.Map;
 public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
-    private Entity entity = new Entity();
+    private Entity tile = new Entity();
 
 
     /**
@@ -167,15 +168,20 @@ public class Game2048 extends GameApplication {
         Board board = new Board();
 
 
+        // Here comes the tile array
+        ArrayList<Tile> tiles = new ArrayList<>();
 
-        /*
-        tile = Entities.builder().at(22,218).viewFromNode(new Tile(0,0,2).tileWithValue()).buildAndAttach(getGameWorld());
-        tile = Entities.builder().at(176,218).viewFromNode(new Tile(0,0,2).tileWithValue()).buildAndAttach(getGameWorld());
-        */
+
+        // Here comes the coordinate system
+
+
+        tile = Entities.builder().at(22+6,218+6).viewFromNode(new Tile(0,0,2).createTile()).buildAndAttach(getGameWorld());
+        tile = Entities.builder().at(176+6,218+6).viewFromNode(new Tile(0,0,256).createTile()).buildAndAttach(getGameWorld());
+
 
         // Built tile and make it collidable
 
-        entity.addComponent(new Tile(0,0,2));
+
 
 
 
