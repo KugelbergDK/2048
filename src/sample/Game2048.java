@@ -4,31 +4,17 @@ import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+
+
 
 /**
  * @author Lucas Kugelberg
@@ -39,8 +25,16 @@ import java.util.Map;
 public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
-    private Entity tile = new Entity();
-    ArrayList<Tile> tiles = new ArrayList<>();
+    private Entity startGameText;
+    public static ArrayList<Tile> tiles = new ArrayList<>();
+
+
+
+
+    public enum Type {
+        TILE, NEWTILE;
+    }
+    public Entity tile;
 
 
 
@@ -65,44 +59,85 @@ public class Game2048 extends GameApplication {
         initBackground();
 
 
+    }
 
-        /* CODE EXAMPLE
-        tiles.add(new Tile(0,0,2));
-        tiles.add(new Tile(1,0,4));
-        tiles.add(new Tile(2,0,8));
 
-        for (Tile tile : tiles){
-            if (tile.getX() == 0){
-                System.out.println("Fandt en på x 0");
-            }
+
+    protected Entity spawnNew(){
+
+        int randomX = ThreadLocalRandom.current().nextInt(0,3+1);
+        int randomY = ThreadLocalRandom.current().nextInt(0,3+1);
+
+        if (tiles.size() == 16){
+            System.out.println("All tiles are filled.");
+            return null;
         }
-        */
+        // If randoms equals a tiles location, generate new randoms and start over until random finds a available spot in the grid.
+        for (int i = 0; i < tiles.size(); i++) {
 
+            if ((tiles.get(i).getX() == randomX) && (tiles.get(i).getY() == randomY)){
+                // Generate new randoms and start over
+                System.out.println("\n\nTHEY ARE THE SAME!");
+                System.out.println("randomX = " + randomX);
+                System.out.println("randomY = " + randomY);
+                System.out.println("tiles X = " + tiles.get(i).getX());
+                System.out.println("tiles Y = " + tiles.get(i).getY());
 
-        tile = Entities.builder().at(22+6,218+6).viewFromNode(new Tile(0,0,2).createTile()).buildAndAttach(getGameWorld());
-        tile = Entities.builder().at(176+6,218+6).viewFromNode(new Tile(0,0,256).createTile()).buildAndAttach(getGameWorld());
-        Tile test = new Tile(0,0,2);
-        spawnTile(test);
+                randomX = ThreadLocalRandom.current().nextInt(0,3+1);
+                randomY = ThreadLocalRandom.current().nextInt(0,3+1);
+                // start over - Minus 1 is because, when loop starts over, it start by adding 1 to it, then (i) will be 0.
+                i = -1;
+            }
 
+        }
 
+        Tile tile = new Tile(randomX,randomY, Math.random() < 0.9 ? 2 : 4);
+        System.out.println("Created new tile at X=" + randomX + ", Y=" + randomY);
+        int tileX = tile.getUICoordinates()[0];
+        int tileY = tile.getUICoordinates()[1];
 
-
-
-
-
+        this.tile = Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
+        return this.tile;
 
     }
 
     protected Entity spawnTile(Tile tile){
-        // Add tile to arraylist
-        tiles.add(tile);
+
         int tileX = tile.getUICoordinates()[0];
         int tileY = tile.getUICoordinates()[1];
-        System.out.println("X: "+ tileX);
         return Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
+
     }
 
 
+
+    protected void info(){
+
+
+        System.out.println("\nLængden af tiles: " + tiles.size());
+
+
+/*
+        Tile tile = new Tile(2,0,2);
+        int tileX = tile.getUICoordinates()[0];
+        int tileY = tile.getUICoordinates()[1];
+        this.tile = Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
+*/
+        // MOVING!!!!!
+        //this.tile.setPosition(200,200);
+
+        // TODO: FIX THIS
+        for (Tile entiTile : tiles){
+            System.out.println("\nX = " + entiTile.getXPos());
+            System.out.println("Y = " + entiTile.getYPos());
+            System.out.println("\n");
+
+        }
+
+
+
+
+    }
 
 
     @Override
@@ -138,21 +173,20 @@ public class Game2048 extends GameApplication {
             @Override
             protected void onAction() {
                 getGameState().increment("currentScoreValue", -5);
+
             }
         }, KeyCode.A);
 
 
 
-
-        UserAction reset = new UserAction("reset") {
+        UserAction info = new UserAction("info") {
             @Override
             protected void onActionBegin() {
                 super.onActionBegin();
-                System.out.println("Begin");
-                Tile tile = new Tile(1,3,128);
-                Tile tile2 = new Tile(3,2,32);
-                spawnTile(tile);
-                spawnTile(tile2);
+                info();
+
+
+
 
             }
 
@@ -166,13 +200,80 @@ public class Game2048 extends GameApplication {
                 super.onActionEnd();
             }
         };
-
-        input.addAction(reset, KeyCode.R);
-
+        input.addAction(info,KeyCode.I);
 
 
+        UserAction startGame = new UserAction("startgame") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                // tiles.clear();
+                // Remove start text
+                startGameText.removeFromWorld();
+                // Spawn first 2 tiles
+                spawnNew();
+
+            }
+
+            @Override
+            protected void onAction() {
+                super.onAction();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+            }
+        };
+        input.addAction(startGame, KeyCode.SPACE);
 
 
+
+        UserAction random = new UserAction("random") {
+            @Override
+            protected void onActionBegin() {
+                // Empty the arraylist for old tiles
+                tiles.clear();
+
+                int[] availInts = {2,4,8,16,32,64,128,256};
+                super.onActionBegin();
+                System.out.println("Begin");
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        Random rnd = new Random();
+                        int delayIndex = rnd.nextInt(availInts.length);
+                        Tile tile = new Tile(i,j,availInts[delayIndex]);
+                        spawnTile(tile);
+                    }
+                }
+
+            }
+
+            @Override
+            protected void onAction() {
+                super.onAction();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+
+                for (int i = 1; i < tiles.size(); i++) {
+
+                    if (tiles.get(i-1).getX() < tiles.get(i).getX()){
+                        System.out.println("test");
+
+                    }
+
+                }
+
+
+
+
+            }
+        };
+
+        input.addAction(random, KeyCode.R);
 
     }
 
@@ -184,6 +285,7 @@ public class Game2048 extends GameApplication {
         // For the background
         getGameScene().setBackgroundColor(Color.rgb(240, 240, 228));
     }
+
 
 
     /**
@@ -204,12 +306,15 @@ public class Game2048 extends GameApplication {
         // Init board
         Board board = new Board();
 
+        Text welcomeText = new Text("Press \"space\" to start the game!");
+        welcomeText.setFill(Color.web("#6E6E64"));
+        welcomeText.setStyle("-fx-font: 16px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        startGameText = Entities.builder().at(15,172).viewFromNode(welcomeText).buildAndAttach(getGameWorld());
+
 
 
 
     }
-
-
 
 
     @Override
@@ -217,13 +322,6 @@ public class Game2048 extends GameApplication {
         vars.put("currentScoreValue", 0);
         vars.put("highestScoreValue", 0);
     }
-
-
-
-
-
-
-
 
 
     public static void main(String[] args) {

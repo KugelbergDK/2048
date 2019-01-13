@@ -36,7 +36,7 @@ public class Board {
          */
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                grid.add(new Tile().emptyTile(),i,j);
+                grid.add(new Tile(i,j).emptyTile(),i,j);
             }
         }
 

@@ -13,19 +13,25 @@ public class TileValue{
 
     // Index 0: background color | Index 1: Font color
     protected static Color tileColors[][] = {
-            {Color.rgb(238,228,218), Color.rgb(119,110,101)},   // Tile with value 2
-            {Color.rgb(236,224,200), Color.rgb(119,110,101)},   // Tile with value 4
-            {Color.rgb(242,177,121), Color.rgb(255,255,255)},   // Tile with value 8
-            {Color.rgb(236,141,83), Color.rgb(255,255,255)},   // Tile with value 16
-            {Color.rgb(245,124,95), Color.rgb(255,255,255)},   // Tile with value 32
-            {Color.rgb(233,89,55), Color.rgb(255,255,255)},   // Tile with value 64
-            {Color.rgb(243,217,107), Color.rgb(255,255,255)},   // Tile with value 128
-            {Color.rgb(241,208,75), Color.rgb(255,255,255)},   // Tile with value 256
+            {Color.rgb(238,228,218), Color.rgb(119,110,101)},   // TileComponent with value 2
+            {Color.rgb(236,224,200), Color.rgb(119,110,101)},   // TileComponent with value 4
+            {Color.rgb(242,177,121), Color.rgb(255,255,255)},   // TileComponent with value 8
+            {Color.rgb(236,141,83), Color.rgb(255,255,255)},   // TileComponent with value 16
+            {Color.rgb(245,124,95), Color.rgb(255,255,255)},   // TileComponent with value 32
+            {Color.rgb(233,89,55), Color.rgb(255,255,255)},   // TileComponent with value 64
+            {Color.rgb(243,217,107), Color.rgb(255,255,255)},   // TileComponent with value 128
+            {Color.rgb(241,208,75), Color.rgb(255,255,255)},   // TileComponent with value 256
     };
 
     protected int value;
     protected int fontSize;
 
+
+
+    public TileValue(){
+
+
+    }
 
 
     public int getValue() {

@@ -1,20 +1,19 @@
 package sample;
 
-import com.almasb.fxgl.app.FXGL;
-import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.component.Component;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import static sample.Game2048.tiles;
 
-public class Tile{
+
+public class Tile extends Entity {
 
     protected Rectangle tileBoxRectBg;
-    protected TileValue tv;
+    protected TileValue tv = new TileValue();
     protected int x;
     protected int y;
     protected boolean isEmpty;
@@ -23,8 +22,10 @@ public class Tile{
     /**
      * The non-arg constructor, mostly used when initializing a blank tile
      */
-    public Tile(){
+    public Tile(int x, int y){
+        // Add tile to arraylist
         this.isEmpty = true;
+        tv.setValue(0);
 
 
 
@@ -39,9 +40,11 @@ public class Tile{
      */
     public Tile(int x, int y, int newValue){
 
+        // Add tile to arraylist
+        tiles.add(this);
+
         tv = new TileValue();
         tv.setValue(newValue);
-        System.out.println("A new tile has been created with a value of: " + tv.getValue());
 
         this.x = x;
         this.y = y;
@@ -84,32 +87,68 @@ public class Tile{
         int y = this.y;
         int[] uiCoordinates = new int[2];
 
+
+        /*
+            I have taken the X position value from my prototype design, but it seems not to fit perfectly, so therefore i have pulled 1 off
+         */
         // First row
-        if (x == 0 && y == 0) uiCoordinates = new int[]{29, 224};
-        if (x == 1 && y == 0) uiCoordinates = new int[]{106, 224};
-        if (x == 2 && y == 0) uiCoordinates = new int[]{183, 224};
-        if (x == 3 && y == 0) uiCoordinates = new int[]{260, 224};
+        if (x == 0 && y == 0) uiCoordinates = new int[]{29-1, 224};
+        if (x == 1 && y == 0) uiCoordinates = new int[]{106-1, 224};
+        if (x == 2 && y == 0) uiCoordinates = new int[]{183-1, 224};
+        if (x == 3 && y == 0) uiCoordinates = new int[]{260-1, 224};
 
         // Second row
-        if (x == 0 && y == 1) uiCoordinates = new int[]{29, 301};
-        if (x == 1 && y == 1) uiCoordinates = new int[]{106, 301};
-        if (x == 2 && y == 1) uiCoordinates = new int[]{183, 301};
-        if (x == 3 && y == 1) uiCoordinates = new int[]{260, 301};
+        if (x == 0 && y == 1) uiCoordinates = new int[]{29-1, 301};
+        if (x == 1 && y == 1) uiCoordinates = new int[]{106-1, 301};
+        if (x == 2 && y == 1) uiCoordinates = new int[]{183-1, 301};
+        if (x == 3 && y == 1) uiCoordinates = new int[]{260-1, 301};
 
         // Third row
-        if (x == 0 && y == 2) uiCoordinates = new int[]{29, 378};
-        if (x == 1 && y == 2) uiCoordinates = new int[]{106, 378};
-        if (x == 2 && y == 2) uiCoordinates = new int[]{183, 378};
-        if (x == 3 && y == 2) uiCoordinates = new int[]{260, 378};
+        if (x == 0 && y == 2) uiCoordinates = new int[]{29-1, 378};
+        if (x == 1 && y == 2) uiCoordinates = new int[]{106-1, 378};
+        if (x == 2 && y == 2) uiCoordinates = new int[]{183-1, 378};
+        if (x == 3 && y == 2) uiCoordinates = new int[]{260-1, 378};
 
         // Fourth row
-        if (x == 0 && y == 3) uiCoordinates = new int[]{29, 455};
-        if (x == 1 && y == 3) uiCoordinates = new int[]{106, 455};
-        if (x == 2 && y == 3) uiCoordinates = new int[]{183, 455};
-        if (x == 3 && y == 3) uiCoordinates = new int[]{260, 455};
+        if (x == 0 && y == 3) uiCoordinates = new int[]{29-1, 455};
+        if (x == 1 && y == 3) uiCoordinates = new int[]{106-1, 455};
+        if (x == 2 && y == 3) uiCoordinates = new int[]{183-1, 455};
+        if (x == 3 && y == 3) uiCoordinates = new int[]{260-1, 455};
 
 
 
+
+        return uiCoordinates;
+
+    }
+
+    public static int[] uiCordinates(int x, int y){
+
+        int[] uiCoordinates = {};
+
+        // First row
+        if (x == 0 && y == 0) uiCoordinates = new int[]{29-1, 224};
+        if (x == 1 && y == 0) uiCoordinates = new int[]{106-1, 224};
+        if (x == 2 && y == 0) uiCoordinates = new int[]{183-1, 224};
+        if (x == 3 && y == 0) uiCoordinates = new int[]{260-1, 224};
+
+        // Second row
+        if (x == 0 && y == 1) uiCoordinates = new int[]{29-1, 301};
+        if (x == 1 && y == 1) uiCoordinates = new int[]{106-1, 301};
+        if (x == 2 && y == 1) uiCoordinates = new int[]{183-1, 301};
+        if (x == 3 && y == 1) uiCoordinates = new int[]{260-1, 301};
+
+        // Third row
+        if (x == 0 && y == 2) uiCoordinates = new int[]{29-1, 378};
+        if (x == 1 && y == 2) uiCoordinates = new int[]{106-1, 378};
+        if (x == 2 && y == 2) uiCoordinates = new int[]{183-1, 378};
+        if (x == 3 && y == 2) uiCoordinates = new int[]{260-1, 378};
+
+        // Fourth row
+        if (x == 0 && y == 3) uiCoordinates = new int[]{29-1, 455};
+        if (x == 1 && y == 3) uiCoordinates = new int[]{106-1, 455};
+        if (x == 2 && y == 3) uiCoordinates = new int[]{183-1, 455};
+        if (x == 3 && y == 3) uiCoordinates = new int[]{260-1, 455};
 
         return uiCoordinates;
 
@@ -125,19 +164,27 @@ public class Tile{
         isEmpty = empty;
     }
 
-    public int getX() {
+    public TileValue getTv() {
+        return tv;
+    }
+
+    public void setTv(TileValue tv) {
+        this.tv = tv;
+    }
+
+    public int getXPos() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setXPos(int x) {
         this.x = x;
     }
 
-    public int getY() {
+    public int getYPos() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setYPos(int y) {
         this.y = y;
     }
 
