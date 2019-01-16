@@ -1,17 +1,20 @@
 package sample;
 
+import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.components.PositionComponent;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import static sample.Game2048.tiles;
 
 
-public class Tile extends Entity {
+public class Tile {
 
+    private PositionComponent position;
     protected Rectangle tileBoxRectBg;
     protected TileValue tv = new TileValue();
     protected int x;
@@ -40,16 +43,24 @@ public class Tile extends Entity {
      */
     public Tile(int x, int y, int newValue){
 
-        // Add tile to arraylist
-        tiles.add(this);
-
         tv = new TileValue();
         tv.setValue(newValue);
+        System.out.println("New Tile created with value: " + tv.getValue());
 
         this.x = x;
         this.y = y;
         this.isEmpty = false;
 
+    }
+
+    public Entity spawnTile(){
+        int x = getUICoordinates()[0];
+        int y = getUICoordinates()[1];
+
+        return Entities.builder()
+                .at(x, y)
+                .viewFromNode(createTile())
+                .buildAndAttach();
     }
 
     public Node createTile(){
@@ -89,7 +100,7 @@ public class Tile extends Entity {
 
 
         /*
-            I have taken the X position value from my prototype design, but it seems not to fit perfectly, so therefore i have pulled 1 off
+            I have taken the X position value from my prototype design, but it seems not to fit perfectly, so therefore i have pulled 1 off from the X-value
          */
         // First row
         if (x == 0 && y == 0) uiCoordinates = new int[]{29-1, 224};
@@ -122,38 +133,9 @@ public class Tile extends Entity {
 
     }
 
-    public static int[] uiCordinates(int x, int y){
-
-        int[] uiCoordinates = {};
-
-        // First row
-        if (x == 0 && y == 0) uiCoordinates = new int[]{29-1, 224};
-        if (x == 1 && y == 0) uiCoordinates = new int[]{106-1, 224};
-        if (x == 2 && y == 0) uiCoordinates = new int[]{183-1, 224};
-        if (x == 3 && y == 0) uiCoordinates = new int[]{260-1, 224};
-
-        // Second row
-        if (x == 0 && y == 1) uiCoordinates = new int[]{29-1, 301};
-        if (x == 1 && y == 1) uiCoordinates = new int[]{106-1, 301};
-        if (x == 2 && y == 1) uiCoordinates = new int[]{183-1, 301};
-        if (x == 3 && y == 1) uiCoordinates = new int[]{260-1, 301};
-
-        // Third row
-        if (x == 0 && y == 2) uiCoordinates = new int[]{29-1, 378};
-        if (x == 1 && y == 2) uiCoordinates = new int[]{106-1, 378};
-        if (x == 2 && y == 2) uiCoordinates = new int[]{183-1, 378};
-        if (x == 3 && y == 2) uiCoordinates = new int[]{260-1, 378};
-
-        // Fourth row
-        if (x == 0 && y == 3) uiCoordinates = new int[]{29-1, 455};
-        if (x == 1 && y == 3) uiCoordinates = new int[]{106-1, 455};
-        if (x == 2 && y == 3) uiCoordinates = new int[]{183-1, 455};
-        if (x == 3 && y == 3) uiCoordinates = new int[]{260-1, 455};
-
-        return uiCoordinates;
-
+    public String toString(){
+        return "[X = " + this.x + ", Y = " + this.y +", VALUE = " + this.tv.value + "]";
     }
-
 
 
     public boolean isEmpty() {

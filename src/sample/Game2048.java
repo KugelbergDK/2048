@@ -26,15 +26,21 @@ public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
     private Entity startGameText;
-    public static ArrayList<Tile> tiles = new ArrayList<>();
+    public Tile tile;
+    public Entity tileEntity = new Entity();
+    // Used for storing Entities, so i can move them etc.
+    public ArrayList<Entity> tileEntities = new ArrayList<>();
+    // Used for storing tiles, so i can update their values, then move them afterwards
+    public ArrayList<Tile> tiles = new ArrayList<>();
 
+    // Trying to add Entity and Tile objects to a hashmap, because a Entity holds a Tile
+    HashMap<Entity, Tile> tileMap = new HashMap<>();
 
 
 
     public enum Type {
-        TILE, NEWTILE;
+        TILE
     }
-    public Entity tile;
 
 
 
@@ -58,136 +64,38 @@ public class Game2048 extends GameApplication {
     protected void initGame(){
         initBackground();
 
-
     }
-
-
-
-    protected Entity spawnNew(){
-
-        int randomX = ThreadLocalRandom.current().nextInt(0,3+1);
-        int randomY = ThreadLocalRandom.current().nextInt(0,3+1);
-
-        if (tiles.size() == 16){
-            System.out.println("All tiles are filled.");
-            return null;
-        }
-        // If randoms equals a tiles location, generate new randoms and start over until random finds a available spot in the grid.
-        for (int i = 0; i < tiles.size(); i++) {
-
-            if ((tiles.get(i).getX() == randomX) && (tiles.get(i).getY() == randomY)){
-                // Generate new randoms and start over
-                System.out.println("\n\nTHEY ARE THE SAME!");
-                System.out.println("randomX = " + randomX);
-                System.out.println("randomY = " + randomY);
-                System.out.println("tiles X = " + tiles.get(i).getX());
-                System.out.println("tiles Y = " + tiles.get(i).getY());
-
-                randomX = ThreadLocalRandom.current().nextInt(0,3+1);
-                randomY = ThreadLocalRandom.current().nextInt(0,3+1);
-                // start over - Minus 1 is because, when loop starts over, it start by adding 1 to it, then (i) will be 0.
-                i = -1;
-            }
-
-        }
-
-        Tile tile = new Tile(randomX,randomY, Math.random() < 0.9 ? 2 : 4);
-        System.out.println("Created new tile at X=" + randomX + ", Y=" + randomY);
-        int tileX = tile.getUICoordinates()[0];
-        int tileY = tile.getUICoordinates()[1];
-
-        this.tile = Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
-        return this.tile;
-
-    }
-
-    protected Entity spawnTile(Tile tile){
-
-        int tileX = tile.getUICoordinates()[0];
-        int tileY = tile.getUICoordinates()[1];
-        return Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
-
-    }
-
-
 
     protected void info(){
 
-
-        System.out.println("\nLængden af tiles: " + tiles.size());
-
-
-/*
-        Tile tile = new Tile(2,0,2);
-        int tileX = tile.getUICoordinates()[0];
-        int tileY = tile.getUICoordinates()[1];
-        this.tile = Entities.builder().at(tileX, tileY).viewFromNode(tile.createTile()).buildAndAttach(getGameWorld());
-*/
-        // MOVING!!!!!
-        //this.tile.setPosition(200,200);
-
-        // TODO: FIX THIS
-        for (Tile entiTile : tiles){
-            System.out.println("\nX = " + entiTile.getXPos());
-            System.out.println("Y = " + entiTile.getYPos());
-            System.out.println("\n");
-
+        ArrayList<Integer> possibleTileValues = new ArrayList<>();
+        for (int i = 2; i <= 256 ; i*=2) {
+            possibleTileValues.add(i);
         }
 
-
-
-
+        int rnd = 0;
+        for (int x = 3; x >= 0; x--) {
+            for (int y = 3; y >= 0; y--) {
+                /*
+                rnd = new Random().nextInt(possibleTileValues.size());
+                Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
+                */
+                System.out.println("[X=" + x + ", Y=" + y + "]");
+            }
+        }
     }
+
 
 
     @Override
     protected void initInput(){
         Input input = getInput();
 
-
-        input.addAction(new UserAction("Move Up") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("currentScoreValue", +5);
-
-
-            }
-        }, KeyCode.W);
-
-        input.addAction(new UserAction("Move Right") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("currentScoreValue", +5);
-
-            }
-        }, KeyCode.D);
-
-        input.addAction(new UserAction("Move Down") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("currentScoreValue", -5);
-            }
-        }, KeyCode.S);
-
-        input.addAction(new UserAction("Move Left") {
-            @Override
-            protected void onAction() {
-                getGameState().increment("currentScoreValue", -5);
-
-            }
-        }, KeyCode.A);
-
-
-
         UserAction info = new UserAction("info") {
             @Override
             protected void onActionBegin() {
                 super.onActionBegin();
                 info();
-
-
-
-
             }
 
             @Override
@@ -200,8 +108,7 @@ public class Game2048 extends GameApplication {
                 super.onActionEnd();
             }
         };
-        input.addAction(info,KeyCode.I);
-
+        input.addAction(info, KeyCode.I);
 
         UserAction startGame = new UserAction("startgame") {
             @Override
@@ -210,11 +117,115 @@ public class Game2048 extends GameApplication {
                 // tiles.clear();
                 // Remove start text
                 startGameText.removeFromWorld();
-                // Spawn first 2 tiles
-                spawnNew();
+
+
+                Tile tile1 = new Tile(0,0,2);
+                Tile tile2 = new Tile(2,1,4);
+                Tile tile3 = new Tile(1,3,8);
+                Tile tile4 = new Tile(1,0,16);
+                Tile tile5 = new Tile(1,2,32);
+                Tile tile6 = new Tile(2,0,64);
+                Tile tile7 = new Tile(0,3,128);
+                Tile tile8 = new Tile(0,1,256);
+
+                tileEntity = tile1.spawnTile();
+                tileMap.put(tileEntity, tile1);
+
+                tileEntity = tile2.spawnTile();
+                tileMap.put(tileEntity, tile2);
+
+                tileEntity = tile3.spawnTile();
+                tileMap.put(tileEntity, tile3);
+
+                tileEntity = tile4.spawnTile();
+                tileMap.put(tileEntity, tile4);
+
+                tileEntity = tile5.spawnTile();
+                tileMap.put(tileEntity, tile5);
+
+                tileEntity = tile6.spawnTile();
+                tileMap.put(tileEntity, tile6);
+
+                tileEntity = tile7.spawnTile();
+                tileMap.put(tileEntity, tile7);
+
+                tileEntity = tile8.spawnTile();
+                tileMap.put(tileEntity, tile8);
+
+
+
+                ArrayList<Integer> possibleTileValues = new ArrayList<>();
+                for (int i = 2; i <= 256 ; i*=2) {
+                    possibleTileValues.add(i);
+                }
+
+
+                int rnd;
+
+                /*
+                 * For the Up move
+                 */
+                /*
+                rnd = 0;
+                for (int y = 0; y < 4; y++) {
+                    for (int x = 0; x < 4; x++) {
+                        rnd = new Random().nextInt(possibleTileValues.size());
+                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
+                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
+                    }
+                }
+                */
+
+
+                /*
+                 * For the right move
+                */
+                /*
+                rnd = 0;
+                for (int x = 3; x >= 0; x--) {
+                    for (int y = 3; y >= 0; y--) {
+                        rnd = new Random().nextInt(possibleTileValues.size());
+                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
+                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
+                    }
+                }
+                */
+
+
+
+                /*
+                 * For the down move
+                 */
+                /*
+                rnd = 0;
+                for (int y = 3; y >= 0; y--) {
+                    for (int x = 0; x < 4; x++) {
+                        rnd = new Random().nextInt(possibleTileValues.size());
+                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
+                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
+                    }
+                }
+                */
+
+
+                /*
+                 * For the Left move
+                 */
+                /*
+                rnd = 0;
+                for (int x = 0; x < 4; x++) {
+                    for (int y = 0; y < 4; y++) {
+                        rnd = new Random().nextInt(possibleTileValues.size());
+                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
+                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]\n");
+                    }
+                }
+                */
+
+
+
 
             }
-
             @Override
             protected void onAction() {
                 super.onAction();
@@ -223,58 +234,121 @@ public class Game2048 extends GameApplication {
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
+
+
+
+            // Now i will move all of them to the right
+
+                /*
+                    NOTE: Get all tile objects from hashmap, then move the entity
+                    SUGGESTION:
+                    How about searching if there is a tile from the right side of, then goes to the left?
+                    Then if search finds a tile, then move that to the right
+                 */
+
+
+                System.out.println("================================");
+                System.out.println("TILE LOCATED AT");
+                for (Tile tile : tileMap.values()){
+                    System.out.println(tile.toString());
+                }
+                System.out.println("================================");
+
+
+                for (int x = 3; x >= 0; x--) {
+                    for (int y = 0; y < 4; y++) {
+                        System.out.println("Searching for [X="+x + ",Y=" + y + "]");
+
+                        for (Entity enti : tileMap.keySet()){
+                            Tile tile = tileMap.get(enti);
+
+                            // Is there any tile there exist in this iteration?
+                            if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                                // Oh god, we found 1!!!
+                                // Now update xy values and move it to the right.
+
+                                System.out.println("Found 1 in grid with : " + tile.toString());
+                                System.out.println("Can it move? " + canMove(tile));
+                                while (canMove(tile)){
+                                        System.out.println("\nMOVING!");
+                                        tile.setXPos(tile.getXPos() + 1);
+                                        enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+                                        System.out.println("I JUST MOVED");
+                                        System.out.println(tile.toString() + "\n");
+
+                                }
+
+
+
+
+
+
+
+                            }
+
+                            // If we enter x value 2,
+
+                        }
+
+                    }
+                }
+
+/*
+                for (Entity enti: tileMap.keySet()){
+                    Tile currentTile = tileMap.get(enti);
+                    System.out.println("\nBEFORE");
+                    System.out.println(currentTile.toString());
+                    System.out.println("Moving until i find the last spot in X");
+                    while (currentTile.getXPos() != 3){
+
+                        int currTileNextXPos = currentTile.getXPos()+1;
+                        // Is there someone to the right of me?
+                        for (Tile checkTile : tileMap.values()){
+
+                            if (checkTile.getXPos() == currTileNextXPos){
+
+                            }
+                        }
+
+                        currentTile.setXPos(currentTile.getXPos()+1);
+                        System.out.println("Moved 1 to the right");
+                        System.out.println(currentTile.toString());
+                    }
+                    System.out.println("FINAL POS FOR TILE ");
+                    System.out.println(currentTile.toString() + "\n");
+
+                    // Now update the entity
+                    enti.setPosition(currentTile.getUICoordinates()[0], currentTile.getUICoordinates()[1]);
+
+                }
+                */
+
+
+
             }
         };
         input.addAction(startGame, KeyCode.SPACE);
 
 
 
-        UserAction random = new UserAction("random") {
-            @Override
-            protected void onActionBegin() {
-                // Empty the arraylist for old tiles
-                tiles.clear();
+    }
 
-                int[] availInts = {2,4,8,16,32,64,128,256};
-                super.onActionBegin();
-                System.out.println("Begin");
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        Random rnd = new Random();
-                        int delayIndex = rnd.nextInt(availInts.length);
-                        Tile tile = new Tile(i,j,availInts[delayIndex]);
-                        spawnTile(tile);
-                    }
-                }
+    protected void moveRight(){
 
+    }
+
+    protected boolean canMove(Tile tile){
+        for (Tile checktile : tileMap.values()){
+            // Check if param tile x+1 is conflicting with any existing tiles.
+            if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
+                return false;
             }
-
-            @Override
-            protected void onAction() {
-                super.onAction();
+            if (tile.getXPos() == 3){
+                return false;
             }
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-                for (int i = 1; i < tiles.size(); i++) {
-
-                    if (tiles.get(i-1).getX() < tiles.get(i).getX()){
-                        System.out.println("test");
-
-                    }
-
-                }
-
-
-
-
-            }
-        };
-
-        input.addAction(random, KeyCode.R);
-
+        }
+        return true;
     }
 
     /**
@@ -310,6 +384,8 @@ public class Game2048 extends GameApplication {
         welcomeText.setFill(Color.web("#6E6E64"));
         welcomeText.setStyle("-fx-font: 16px bold; -fx-font-family: 'Arial Rounded MT Bold'");
         startGameText = Entities.builder().at(15,172).viewFromNode(welcomeText).buildAndAttach(getGameWorld());
+
+
 
 
 
