@@ -75,9 +75,10 @@ public class Game2048 extends GameApplication {
                 Tile tile3 = new Tile(1,3,8);
                 Tile tile4 = new Tile(1,0,16);
                 Tile tile5 = new Tile(1,2,32);
+                Tile tile55 = new Tile(0,2,32);
                 Tile tile6 = new Tile(2,0,64);
                 Tile tile7 = new Tile(0,3,128);
-                Tile tile8 = new Tile(0,1,256);
+                Tile tile8 = new Tile(3,1,256);
 
                 tileEntity = tile1.spawnTile();
                 tileMap.put(tileEntity, tile1);
@@ -183,6 +184,18 @@ public class Game2048 extends GameApplication {
         };
         input.addAction(startGame, KeyCode.SPACE);
 
+        UserAction moveUp = new UserAction("move_up") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                moveUp();
+            }
+
+        };
+        input.addAction(moveUp, KeyCode.UP);
+
+
+
         UserAction moveRight = new UserAction("move_right") {
             @Override
             protected void onActionBegin() {
@@ -190,16 +203,6 @@ public class Game2048 extends GameApplication {
                 moveRight();
             }
 
-            @Override
-            protected void onAction() {
-                super.onAction();
-            }
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-                moveUp();
-            }
         };
         input.addAction(moveRight, KeyCode.RIGHT);
 
@@ -209,13 +212,27 @@ public class Game2048 extends GameApplication {
 
     protected void moveUp(){
 
+
+
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
+                for (Entity enti : tileMap.keySet()){
+                    Tile tile = tileMap.get(enti);
 
+                    // Is there any tile there exist in this iteration?
+                    if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
+                        // Oh god, we found 1!!!
+                        // Now update xy values and move it to the right.
+                        while (canMove(tile, "up")){
+                            tile.setYPos(tile.getYPos() - 1);
+                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+
+                        }
+                    }
+                }
             }
         }
-
     }
 
     protected void moveRight(){
@@ -231,17 +248,14 @@ public class Game2048 extends GameApplication {
 
                         // Oh god, we found 1!!!
                         // Now update xy values and move it to the right.
-
                         while (canMove(tile, "right")){
                             tile.setXPos(tile.getXPos() + 1);
                             enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                         }
                     }
                 }
-
             }
         }
-
     }
 
     protected boolean canMove(Tile tile, String direction){
@@ -263,10 +277,21 @@ public class Game2048 extends GameApplication {
 
         if (direction.toLowerCase() == "up"){
 
+            for (Tile checktile : tileMap.values()){
+
+                if (((tile.getYPos() -1 ) == checktile.getYPos()) && (tile.getXPos() == checktile.getXPos())){
+                    return false;
+                }
+                if (tile.getYPos() == 0){
+                    return false;
+                }
+            }
+            return true;
+
         }
 
         System.out.println("Didn't go as planned, I ended up in the last return... Try looking at direction");
-        return true;
+        return false;
 
 
     }
