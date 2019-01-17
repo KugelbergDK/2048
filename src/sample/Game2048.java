@@ -68,7 +68,7 @@ public class Game2048 extends GameApplication {
                 // tiles.clear();
                 // Remove start text
                 startGameText.removeFromWorld();
-
+/*
 
                 Tile tile1 = new Tile(0,0,2);
                 Tile tile2 = new Tile(2,1,4);
@@ -103,7 +103,23 @@ public class Game2048 extends GameApplication {
 
                 tileEntity = tile8.spawnTile();
                 tileMap.put(tileEntity, tile8);
+*/
 
+                Tile tile1 = new Tile(0,0,2);
+                Tile tile2 = new Tile(2,1,2);
+                Tile tile3 = new Tile(1,3,4);
+                Tile tile4 = new Tile(1,0,4);
+                tileEntity = tile1.spawnTile();
+                tileMap.put(tileEntity, tile1);
+
+                tileEntity = tile2.spawnTile();
+                tileMap.put(tileEntity, tile2);
+
+                tileEntity = tile3.spawnTile();
+                tileMap.put(tileEntity, tile3);
+
+                tileEntity = tile4.spawnTile();
+                tileMap.put(tileEntity, tile4);
 
 
                 /*
@@ -172,6 +188,16 @@ public class Game2048 extends GameApplication {
             }
         };
         input.addAction(startGame, KeyCode.SPACE);
+
+        UserAction info = new UserAction("info") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+
+                System.out.println(tileMap.size());
+
+            }
+        }; input.addAction(info, KeyCode.I);
 
 
         UserAction moveUp = new UserAction("move_up") {
@@ -318,6 +344,10 @@ public class Game2048 extends GameApplication {
 
             for (Tile checktile : tileMap.values()){
 
+                if (canMerge(tile, checktile, "up")){
+                    merge(tile,checktile,"up");
+                }
+
                 if (((tile.getYPos() -1 ) == checktile.getYPos()) && (tile.getXPos() == checktile.getXPos())){
                     return false;
                 }
@@ -331,7 +361,11 @@ public class Game2048 extends GameApplication {
         if (direction.toLowerCase() == "right"){
 
             for (Tile checktile : tileMap.values()){
-                // Check if param tile x+1 is conflicting with any existing tiles.
+
+                if (canMerge(tile, checktile, "right")){
+
+                }
+
                 if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
                     return false;
                 }
@@ -346,6 +380,10 @@ public class Game2048 extends GameApplication {
 
             for (Tile checktile : tileMap.values()){
 
+                if (canMerge(tile, checktile, "down")){
+
+                }
+
                 if (((tile.getYPos() +1 ) == checktile.getYPos()) && (tile.getXPos() == checktile.getXPos())){
                     return false;
                 }
@@ -359,7 +397,11 @@ public class Game2048 extends GameApplication {
         if (direction.toLowerCase() == "left"){
 
             for (Tile checktile : tileMap.values()){
-                // Check if param tile x+1 is conflicting with any existing tiles.
+
+                if (canMerge(tile, checktile, "left")){
+
+                }
+
                 if (((tile.getXPos() - 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
                     return false;
                 }
@@ -376,6 +418,56 @@ public class Game2048 extends GameApplication {
         return false;
 
 
+    }
+
+    protected boolean canMerge(Tile tile1, Tile tile2, String direction){
+        if (direction.equals("up")){
+            // If there is a tile upon the current tile
+            if (((tile1.getYPos() - 1) == tile2.getYPos()) && (tile1.getXPos() == tile2.getXPos())){
+                // If the value match
+                if (tile1.getTv().getValue() == tile2.getTv().getValue()){
+                    System.out.println("[+] " + tile1.toString() + " AND " + tile2.toString() + " CAN MERGE!");
+                    // Return true
+                    return true;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+    protected void merge(Tile tile1, Tile tile2, String direction){
+        // Get direction
+        if (direction.equals("up")){
+            // get Entity from tile input (tile1 and tile2)
+            // search for the right Entity
+
+            // Create iterator so i can remove the enti from tilemap
+            Iterator<Entity> iterator = tileMap.keySet().iterator();
+
+            while (iterator.hasNext()){
+                Entity enti = iterator.next();
+
+                Tile tileToCheck = tileMap.get(enti);
+
+                // We found the right Entity
+                if (tile1 == tileToCheck){
+                    System.out.println("[--] Found the tile1: " + tile1.toString());
+                    System.out.println("[--] Found the tile2: " + tile2.toString());
+                    // Update view and value
+                    tile2.getTv().setValue(tile2.getTv().getValue()*2);
+                    System.out.println("\n[+] I just updated the value for tile2 " + tile2.toString());
+                    tile2.spawnTile();
+
+                    // Now remove the old til from the view
+                    enti.removeFromWorld();
+                    iterator.remove();
+
+                    break;
+                }
+            }
+        }
     }
 
     /**
