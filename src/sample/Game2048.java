@@ -198,11 +198,23 @@ public class Game2048 extends GameApplication {
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
+                moveUp();
             }
         };
-        input.addAction(moveRight, KeyCode.D);
+        input.addAction(moveRight, KeyCode.RIGHT);
 
 
+
+    }
+
+    protected void moveUp(){
+
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+
+
+            }
+        }
 
     }
 
@@ -220,7 +232,7 @@ public class Game2048 extends GameApplication {
                         // Oh god, we found 1!!!
                         // Now update xy values and move it to the right.
 
-                        while (canMove(tile)){
+                        while (canMove(tile, "right")){
                             tile.setXPos(tile.getXPos() + 1);
                             enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                         }
@@ -232,17 +244,31 @@ public class Game2048 extends GameApplication {
 
     }
 
-    protected boolean canMove(Tile tile){
-        for (Tile checktile : tileMap.values()){
-            // Check if param tile x+1 is conflicting with any existing tiles.
-            if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
-                return false;
+    protected boolean canMove(Tile tile, String direction){
+
+        if (direction.toLowerCase() == "right"){
+
+            for (Tile checktile : tileMap.values()){
+                // Check if param tile x+1 is conflicting with any existing tiles.
+                if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
+                    return false;
+                }
+                if (tile.getXPos() == 3){
+                    return false;
+                }
             }
-            if (tile.getXPos() == 3){
-                return false;
-            }
+            return true;
+
         }
+
+        if (direction.toLowerCase() == "up"){
+
+        }
+
+        System.out.println("Didn't go as planned, I ended up in the last return... Try looking at direction");
         return true;
+
+
     }
 
     /**
