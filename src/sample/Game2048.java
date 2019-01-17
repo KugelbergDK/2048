@@ -170,19 +170,9 @@ public class Game2048 extends GameApplication {
 
 
             }
-            @Override
-            protected void onAction() {
-                super.onAction();
-            }
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-
-            }
         };
         input.addAction(startGame, KeyCode.SPACE);
+
 
         UserAction moveUp = new UserAction("move_up") {
             @Override
@@ -193,7 +183,6 @@ public class Game2048 extends GameApplication {
 
         };
         input.addAction(moveUp, KeyCode.UP);
-
 
 
         UserAction moveRight = new UserAction("move_right") {
@@ -207,12 +196,31 @@ public class Game2048 extends GameApplication {
         input.addAction(moveRight, KeyCode.RIGHT);
 
 
+        UserAction moveDown = new UserAction("move_down") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                moveDown();
+            }
+
+        };
+        input.addAction(moveDown, KeyCode.DOWN);
+
+
+        UserAction moveLeft = new UserAction("move_left") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                moveLeft();
+            }
+
+        };
+        input.addAction(moveLeft, KeyCode.LEFT);
+
 
     }
 
     protected void moveUp(){
-
-
 
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
@@ -258,22 +266,53 @@ public class Game2048 extends GameApplication {
         }
     }
 
-    protected boolean canMove(Tile tile, String direction){
+    protected void moveDown(){
 
-        if (direction.toLowerCase() == "right"){
+        for (int y = 3; y >= 0; y--) {
+            for (int x = 0; x < 4; x++) {
+                for (Entity enti : tileMap.keySet()){
+                    Tile tile = tileMap.get(enti);
 
-            for (Tile checktile : tileMap.values()){
-                // Check if param tile x+1 is conflicting with any existing tiles.
-                if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
-                    return false;
-                }
-                if (tile.getXPos() == 3){
-                    return false;
+                    // Is there any tile there exist in this iteration?
+                    if ((tile.getYPos() == y) && (tile.getXPos() == x)){
+
+                        // Oh god, we found 1!!!
+                        // Now update xy values and move it to the right.
+                        while (canMove(tile, "down")){
+                            tile.setYPos(tile.getYPos() + 1);
+                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+
+                        }
+                    }
                 }
             }
-            return true;
-
         }
+    }
+
+    protected void moveLeft(){
+
+        // Now i will move all of them to the Left
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (Entity enti : tileMap.keySet()){
+                    Tile tile = tileMap.get(enti);
+
+                    // Is there any tile there exist in this iteration?
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                        // Oh god, we found 1!!!
+                        // Now update xy values and move it to the right.
+                        while (canMove(tile, "left")){
+                            tile.setXPos(tile.getXPos() - 1);
+                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected boolean canMove(Tile tile, String direction){
 
         if (direction.toLowerCase() == "up"){
 
@@ -287,8 +326,51 @@ public class Game2048 extends GameApplication {
                 }
             }
             return true;
-
         }
+
+        if (direction.toLowerCase() == "right"){
+
+            for (Tile checktile : tileMap.values()){
+                // Check if param tile x+1 is conflicting with any existing tiles.
+                if (((tile.getXPos() + 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
+                    return false;
+                }
+                if (tile.getXPos() == 3){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (direction.toLowerCase() == "down"){
+
+            for (Tile checktile : tileMap.values()){
+
+                if (((tile.getYPos() +1 ) == checktile.getYPos()) && (tile.getXPos() == checktile.getXPos())){
+                    return false;
+                }
+                if (tile.getYPos() == 3){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (direction.toLowerCase() == "left"){
+
+            for (Tile checktile : tileMap.values()){
+                // Check if param tile x+1 is conflicting with any existing tiles.
+                if (((tile.getXPos() - 1) == checktile.getXPos()) && (tile.getYPos() == checktile.getYPos())){
+                    return false;
+                }
+                if (tile.getXPos() == 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
 
         System.out.println("Didn't go as planned, I ended up in the last return... Try looking at direction");
         return false;
