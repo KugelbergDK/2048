@@ -26,22 +26,10 @@ public class Game2048 extends GameApplication {
 
     public final static int CORNER_VALUE = 10;
     private Entity startGameText;
-    public Tile tile;
     public Entity tileEntity = new Entity();
-    // Used for storing Entities, so i can move them etc.
-    public ArrayList<Entity> tileEntities = new ArrayList<>();
-    // Used for storing tiles, so i can update their values, then move them afterwards
-    public ArrayList<Tile> tiles = new ArrayList<>();
 
-    // Trying to add Entity and Tile objects to a hashmap, because a Entity holds a Tile
-    HashMap<Entity, Tile> tileMap = new HashMap<>();
-
-
-
-    public enum Type {
-        TILE
-    }
-
+    // Every Entity haves a tile
+    public HashMap<Entity, Tile> tileMap = new HashMap<>();
 
 
     /**
@@ -66,51 +54,14 @@ public class Game2048 extends GameApplication {
 
     }
 
-    protected void info(){
-
-        ArrayList<Integer> possibleTileValues = new ArrayList<>();
-        for (int i = 2; i <= 256 ; i*=2) {
-            possibleTileValues.add(i);
-        }
-
-        int rnd = 0;
-        for (int x = 3; x >= 0; x--) {
-            for (int y = 3; y >= 0; y--) {
-                /*
-                rnd = new Random().nextInt(possibleTileValues.size());
-                Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
-                */
-                System.out.println("[X=" + x + ", Y=" + y + "]");
-            }
-        }
-    }
-
 
 
     @Override
     protected void initInput(){
         Input input = getInput();
 
-        UserAction info = new UserAction("info") {
-            @Override
-            protected void onActionBegin() {
-                super.onActionBegin();
-                info();
-            }
 
-            @Override
-            protected void onAction() {
-                super.onAction();
-            }
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-            }
-        };
-        input.addAction(info, KeyCode.I);
-
-        UserAction startGame = new UserAction("startgame") {
+        UserAction startGame = new UserAction("start_game") {
             @Override
             protected void onActionBegin() {
                 super.onActionBegin();
@@ -153,14 +104,6 @@ public class Game2048 extends GameApplication {
                 tileMap.put(tileEntity, tile8);
 
 
-
-                ArrayList<Integer> possibleTileValues = new ArrayList<>();
-                for (int i = 2; i <= 256 ; i*=2) {
-                    possibleTileValues.add(i);
-                }
-
-
-                int rnd;
 
                 /*
                  * For the Up move
@@ -236,105 +179,56 @@ public class Game2048 extends GameApplication {
                 super.onActionEnd();
 
 
-
-            // Now i will move all of them to the right
-
-                /*
-                    NOTE: Get all tile objects from hashmap, then move the entity
-                    SUGGESTION:
-                    How about searching if there is a tile from the right side of, then goes to the left?
-                    Then if search finds a tile, then move that to the right
-                 */
-
-
-                System.out.println("================================");
-                System.out.println("TILE LOCATED AT");
-                for (Tile tile : tileMap.values()){
-                    System.out.println(tile.toString());
-                }
-                System.out.println("================================");
-
-
-                for (int x = 3; x >= 0; x--) {
-                    for (int y = 0; y < 4; y++) {
-                        System.out.println("Searching for [X="+x + ",Y=" + y + "]");
-
-                        for (Entity enti : tileMap.keySet()){
-                            Tile tile = tileMap.get(enti);
-
-                            // Is there any tile there exist in this iteration?
-                            if ((tile.getXPos() == x) && (tile.getYPos() == y)){
-
-                                // Oh god, we found 1!!!
-                                // Now update xy values and move it to the right.
-
-                                System.out.println("Found 1 in grid with : " + tile.toString());
-                                System.out.println("Can it move? " + canMove(tile));
-                                while (canMove(tile)){
-                                        System.out.println("\nMOVING!");
-                                        tile.setXPos(tile.getXPos() + 1);
-                                        enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
-                                        System.out.println("I JUST MOVED");
-                                        System.out.println(tile.toString() + "\n");
-
-                                }
-
-
-
-
-
-
-
-                            }
-
-                            // If we enter x value 2,
-
-                        }
-
-                    }
-                }
-
-/*
-                for (Entity enti: tileMap.keySet()){
-                    Tile currentTile = tileMap.get(enti);
-                    System.out.println("\nBEFORE");
-                    System.out.println(currentTile.toString());
-                    System.out.println("Moving until i find the last spot in X");
-                    while (currentTile.getXPos() != 3){
-
-                        int currTileNextXPos = currentTile.getXPos()+1;
-                        // Is there someone to the right of me?
-                        for (Tile checkTile : tileMap.values()){
-
-                            if (checkTile.getXPos() == currTileNextXPos){
-
-                            }
-                        }
-
-                        currentTile.setXPos(currentTile.getXPos()+1);
-                        System.out.println("Moved 1 to the right");
-                        System.out.println(currentTile.toString());
-                    }
-                    System.out.println("FINAL POS FOR TILE ");
-                    System.out.println(currentTile.toString() + "\n");
-
-                    // Now update the entity
-                    enti.setPosition(currentTile.getUICoordinates()[0], currentTile.getUICoordinates()[1]);
-
-                }
-                */
-
-
-
             }
         };
         input.addAction(startGame, KeyCode.SPACE);
+
+        UserAction moveRight = new UserAction("move_right") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+                moveRight();
+            }
+
+            @Override
+            protected void onAction() {
+                super.onAction();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                super.onActionEnd();
+            }
+        };
+        input.addAction(moveRight, KeyCode.D);
 
 
 
     }
 
     protected void moveRight(){
+
+        // Now i will move all of them to the right
+        for (int x = 3; x >= 0; x--) {
+            for (int y = 0; y < 4; y++) {
+                for (Entity enti : tileMap.keySet()){
+                    Tile tile = tileMap.get(enti);
+
+                    // Is there any tile there exist in this iteration?
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                        // Oh god, we found 1!!!
+                        // Now update xy values and move it to the right.
+
+                        while (canMove(tile)){
+                            tile.setXPos(tile.getXPos() + 1);
+                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+                        }
+                    }
+                }
+
+            }
+        }
 
     }
 
