@@ -27,9 +27,13 @@ public class Game2048 extends GameApplication {
     public final static int CORNER_VALUE = 10;
     private Entity startGameText;
     public Entity tileEntity = new Entity();
+    public Entity tempTileEnti = new Entity();
+    public Tile tempTile;
 
     // Every Entity haves a tile
     public HashMap<Entity, Tile> tileMap = new HashMap<>();
+
+    public ArrayList<Tile> tilesToBeRemoved = new ArrayList<>();
 
 
     /**
@@ -253,18 +257,17 @@ public class Game2048 extends GameApplication {
                 for (Entity enti : tileMap.keySet()){
                     Tile tile = tileMap.get(enti);
 
-                    // Is there any tile there exist in this iteration?
-                    if ((tile.getYPos() == y) && (tile.getXPos() == x)){
+                    while (canMove(tile, "up")){
+                        tile.setYPos(tile.getYPos() - 1);
+                        enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
 
-                        // Oh god, we found 1!!!
-                        // Now update xy values and move it to the right.
-                        while (canMove(tile, "up")){
-                            tile.setYPos(tile.getYPos() - 1);
-                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
-
-                        }
                     }
                 }
+
+                // Time to remove the old tiles and entities
+                removeTiles();
+
+
             }
         }
     }
@@ -438,36 +441,55 @@ public class Game2048 extends GameApplication {
     }
 
     protected void merge(Tile tile1, Tile tile2, String direction){
+
         // Get direction
         if (direction.equals("up")){
-            // get Entity from tile input (tile1 and tile2)
-            // search for the right Entity
 
-            // Create iterator so i can remove the enti from tilemap
-            Iterator<Entity> iterator = tileMap.keySet().iterator();
 
-            while (iterator.hasNext()){
-                Entity enti = iterator.next();
+            /*
+                My idea, is to create a new temporary tile and Entity,
+                then when it has been created with the new walue,
+                I will remove the old tiles and entities, and add the new tile and entity to tilemap
 
-                Tile tileToCheck = tileMap.get(enti);
+                The reason that I not will put and remove to tilemap, is because all the move methods are in iteration of tilemap.
+                And this method is called within the move methods
+            */
 
-                // We found the right Entity
-                if (tile1 == tileToCheck){
-                    System.out.println("[--] Found the tile1: " + tile1.toString());
-                    System.out.println("[--] Found the tile2: " + tile2.toString());
-                    // Update view and value
-                    tile2.getTv().setValue(tile2.getTv().getValue()*2);
-                    System.out.println("\n[+] I just updated the value for tile2 " + tile2.toString());
-                    tile2.spawnTile();
+            // I use tile2's XY values, because it is the one highest to the direction it is going.
+            tempTile = new Tile(tile2.getXPos(), tile2.getYPos(), ((tile1.getTv().getValue()) + (tile2.getTv().getValue())));
+            tempTileEnti = tempTile.spawnTile();
 
-                    // Now remove the old til from the view
-                    enti.removeFromWorld();
-                    iterator.remove();
+            // Add tile1 and tile2 to a toBeRemovedArray
+            tilesToBeRemoved.add(tile1);
+            tilesToBeRemoved.add(tile2);
 
-                    break;
-                }
-            }
+
         }
+    }
+
+    public void removeTiles(){
+
+        Iterator<Entity> it = tileMap.keySet().iterator();
+
+        while(it.hasNext()){
+            Entity enti = it.next();
+
+            for (Tile tile : tilesToBeRemoved){
+                Tile mapTile = tileMap.get(enti);
+
+                if (mapTile == tile){
+                    it.remove();
+                    enti.removeFromWorld();
+                    System.out.println("[+] Object has been removed");
+                }
+
+            }
+
+        }
+
+        // Finally add the temporary tiles to tilemap
+        tileMap.put(tempTileEnti, tempTile);
+
     }
 
     /**
