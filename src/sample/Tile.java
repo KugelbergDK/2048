@@ -23,7 +23,7 @@ public class Tile {
 
 
     /**
-     * The non-arg constructor, mostly used when initializing a blank tile
+     * The x,y constructor, mostly used when initializing a blank tile
      */
     public Tile(int x, int y){
         // Add tile to arraylist
@@ -42,14 +42,14 @@ public class Tile {
      * @param newValue The new value for the object
      */
     public Tile(int x, int y, int newValue){
-
-        tv = new TileValue();
-        tv.setValue(newValue);
-        System.out.println("New Tile created with value: " + tv.getValue());
-
         this.x = x;
         this.y = y;
         this.isEmpty = false;
+
+        tv = new TileValue();
+        tv.setValue(newValue);
+        System.out.println("New Tile created with values: " + this.toString());
+
 
     }
 
