@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -80,122 +81,7 @@ public class Game2048 extends GameApplication {
                 // tiles.clear();
                 // Remove start text
                 startGameText.removeFromWorld();
-                generateNewTile();
-/*
-
-                Tile tile1 = new Tile(0,0,2);
-                Tile tile2 = new Tile(2,1,4);
-                Tile tile3 = new Tile(1,3,8);
-                Tile tile4 = new Tile(1,0,16);
-                Tile tile5 = new Tile(1,2,32);
-                Tile tile55 = new Tile(0,2,32);
-                Tile tile6 = new Tile(2,0,64);
-                Tile tile7 = new Tile(0,3,128);
-                Tile tile8 = new Tile(3,1,256);
-
-                tileEntity = tile1.spawnTile();
-                tileMap.put(tileEntity, tile1);
-
-                tileEntity = tile2.spawnTile();
-                tileMap.put(tileEntity, tile2);
-
-                tileEntity = tile3.spawnTile();
-                tileMap.put(tileEntity, tile3);
-
-                tileEntity = tile4.spawnTile();
-                tileMap.put(tileEntity, tile4);
-
-                tileEntity = tile5.spawnTile();
-                tileMap.put(tileEntity, tile5);
-
-                tileEntity = tile6.spawnTile();
-                tileMap.put(tileEntity, tile6);
-
-                tileEntity = tile7.spawnTile();
-                tileMap.put(tileEntity, tile7);
-
-                tileEntity = tile8.spawnTile();
-                tileMap.put(tileEntity, tile8);
-
-
-                Tile tile1 = new Tile(0,0,2);
-                Tile tile2 = new Tile(2,1,2);
-                Tile tile3 = new Tile(1,3,4);
-                Tile tile4 = new Tile(1,0,4);
-                tileEntity = tile1.spawnTile();
-                tileMap.put(tileEntity, tile1);
-
-                tileEntity = tile2.spawnTile();
-                tileMap.put(tileEntity, tile2);
-
-                tileEntity = tile3.spawnTile();
-                tileMap.put(tileEntity, tile3);
-
-                tileEntity = tile4.spawnTile();
-                tileMap.put(tileEntity, tile4);
-*/
-
-                /*
-                 * For the Up move
-                 */
-                /*
-                rnd = 0;
-                for (int y = 0; y < 4; y++) {
-                    for (int x = 0; x < 4; x++) {
-                        rnd = new Random().nextInt(possibleTileValues.size());
-                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
-                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
-                    }
-                }
-                */
-
-
-                /*
-                 * For the right move
-                */
-                /*
-                rnd = 0;
-                for (int x = 3; x >= 0; x--) {
-                    for (int y = 3; y >= 0; y--) {
-                        rnd = new Random().nextInt(possibleTileValues.size());
-                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
-                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
-                    }
-                }
-                */
-
-
-
-                /*
-                 * For the down move
-                 */
-                /*
-                rnd = 0;
-                for (int y = 3; y >= 0; y--) {
-                    for (int x = 0; x < 4; x++) {
-                        rnd = new Random().nextInt(possibleTileValues.size());
-                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
-                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]");
-                    }
-                }
-                */
-
-
-                /*
-                 * For the Left move
-                 */
-                /*
-                rnd = 0;
-                for (int x = 0; x < 4; x++) {
-                    for (int y = 0; y < 4; y++) {
-                        rnd = new Random().nextInt(possibleTileValues.size());
-                        Entity tile = new Tile(x,y, possibleTileValues.get(rnd)).spawnTile();
-                        System.out.println("\nCreated tile at: [X=" + x + ", Y=" + y + "]\n");
-                    }
-                }
-                */
-
-
+                generateNewTile(true);
 
 
             }
@@ -224,6 +110,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
+                generateNewTile(false);
             }
 
             @Override
@@ -241,6 +128,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
+                generateNewTile(false);
 
             }
 
@@ -259,6 +147,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
+                generateNewTile(false);
             }
 
             @Override
@@ -277,6 +166,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
+                generateNewTile(false);
             }
 
             @Override
@@ -721,78 +611,67 @@ public class Game2048 extends GameApplication {
     }
 
 
-    public void generateNewTile(){
+    public void generateNewTile(boolean isStarting){
+
+        ArrayList<Object[]> bannedCoordinates = new ArrayList<>();
+        Object[] generatedRnd;
+        int max = 1;
+        if (isStarting) max = 2;
+
+        int rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+        int rndY = ThreadLocalRandom.current().nextInt(0, 1 + 1); // Dont wanna generate a tile under 1
         int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
-        /*
-        boolean haveInitNewTile = false;
 
-        if (tileMap.isEmpty()){
-            System.out.println("tilemap is empty");
-            Tile tile1 = new Tile(3,0, new Random().nextDouble() < 1.0 ? 2 : 4);
-            Tile tile2 = new Tile(1,0, new Random().nextDouble() < 1.0 ? 2 : 4);
-            Tile tile3 = new Tile(2,0, new Random().nextDouble() < 1.0 ? 2 : 4);
-            Tile tile4 = new Tile(0,0, new Random().nextDouble() < 1.0 ? 2 : 4);
-            tileEntity = tile1.spawnTile();
-            tileMap.put(tileEntity, tile1);
 
-            tileEntity = tile2.spawnTile();
-            tileMap.put(tileEntity, tile2);
-
-            tileEntity = tile3.spawnTile();
-            tileMap.put(tileEntity, tile3);
-
-            tileEntity = tile4.spawnTile();
-            tileMap.put(tileEntity, tile4);
+        // Construct used Coordinates
+        for (Object[] obj : tileTable) {
+            Tile tile = (Tile) obj[1];
+            int x = tile.getXPos();
+            int y = tile.getYPos();
+            bannedCoordinates.add(new Object[]{x,y});
         }
-        */
 
-        /*
-            TESTING
-         */
-        Tile tile1 = new Tile(0,0,4);
-        Tile tile2 = new Tile(1,0,4);
-        Tile tile3 = new Tile(2,0,8);
-        Tile tile4 = new Tile(3,0,8);
-
-        tileEntity = tile1.spawnTile();
-        Object[] entiTileArr = {tileEntity, tile1};
-        tileTable.add(entiTileArr);
-
-        tileEntity = tile2.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile2};
-        tileTable.add(entiTileArr);
-
-        tileEntity = tile3.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile3};
-        tileTable.add(entiTileArr);
-
-        tileEntity = tile4.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile4};
-        tileTable.add(entiTileArr);
+        System.out.println("============================== BANNED TILE COORDINATES ==============================");
+        for (Object[] coord : bannedCoordinates){
+            int x = (int) coord[0];
+            int y = (int) coord[1];
+            System.out.println(" [ X="+x + ", Y=" + y + " ]");
+        }
+        System.out.println("============================== BANNED TILE COORDINATES ==============================");
 
 
 
-        Tile tile5 = new Tile(0,1,4);
-        Tile tile6 = new Tile(1,1,4);
-        Tile tile7 = new Tile(2,1,4);
-        Tile tile8 = new Tile(3,1,4);
 
-        tileEntity = tile5.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile5};
-        tileTable.add(entiTileArr);
+        int usedX = 0;
+        int usedY = 0;
+        // Generate until it finds a exact match
+        do {
 
-        tileEntity = tile6.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile6};
-        tileTable.add(entiTileArr);
+            for (Object[] usedCoord : bannedCoordinates){
+                usedX = (int) usedCoord[0];
+                usedY = (int) usedCoord[1];
 
-        tileEntity = tile7.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile7};
-        tileTable.add(entiTileArr);
+                if (usedX == rndX && usedY == rndY){
+                    rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+                    rndY = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+                }
+            }
 
-        tileEntity = tile8.spawnTile();
-        entiTileArr = new Object[]{tileEntity, tile8};
-        tileTable.add(entiTileArr);
+            generatedRnd = new Object[]{rndX, rndY};
 
+        } while ((usedX == rndX) && (usedY == rndY));
+
+
+
+        // Iterate twice if the game is starting, otherwise just once
+        for (int i = 0; i < max; i++) {
+
+            Tile tile = new Tile(rndX, rndY, rndValue);
+            tileEntity = tile.spawnTile();
+            Object[] entiTileArr = new Object[]{tileEntity, tile};
+            tileTable.add(entiTileArr);
+
+        }
 
 
     }
