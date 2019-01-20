@@ -310,6 +310,7 @@ public class Game2048 extends GameApplication {
 */
     protected void moveRight(){
 
+        int i = 0;
         do {
             for (int y = 0; y < 4; y++) {
                 for (int x = 3; x >= 0; x--) {
@@ -333,7 +334,8 @@ public class Game2048 extends GameApplication {
             }
             // Somehow, the software needs to move all the tiles, then merge, then move again.
             merge("right");
-        } while (canMove("right"));
+            i++;
+        } while (i<2);
 
     }
 
@@ -625,14 +627,14 @@ public class Game2048 extends GameApplication {
             TESTING
          */
         Tile tile1 = new Tile(0,0,2);
-        //Tile tile2 = new Tile(1,0,8);
-        //Tile tile3 = new Tile(2,0,8);
+        Tile tile2 = new Tile(1,0,8);
+        Tile tile3 = new Tile(2,0,8);
         Tile tile4 = new Tile(3,0,2);
 
         tileEntity = tile1.spawnTile();
         Object[] entiTileArr = {tileEntity, tile1};
         tileTable.add(entiTileArr);
-/*
+
         tileEntity = tile2.spawnTile();
         entiTileArr = new Object[]{tileEntity, tile2};
         tileTable.add(entiTileArr);
@@ -640,7 +642,7 @@ public class Game2048 extends GameApplication {
         tileEntity = tile3.spawnTile();
         entiTileArr = new Object[]{tileEntity, tile3};
         tileTable.add(entiTileArr);
-*/
+
         tileEntity = tile4.spawnTile();
         entiTileArr = new Object[]{tileEntity, tile4};
         tileTable.add(entiTileArr);
