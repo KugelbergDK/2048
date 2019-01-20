@@ -327,7 +327,6 @@ public class Game2048 extends GameApplication {
         } while (i<2);
 
 
-
     }
 
     protected void moveRight(){
@@ -347,7 +346,7 @@ public class Game2048 extends GameApplication {
 
                             // If can move, then update tile object and entity
                             while(canMove(entiTile, "right")){
-
+                                System.out.println("[MOVING] "+ tile.toString() + "+1");
                                 tile.setXPos(tile.getXPos()+1);
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                             }
@@ -368,28 +367,37 @@ public class Game2048 extends GameApplication {
 
     protected void moveDown(){
 
-        for (int x = 0; x < 4; x++) {
-            for (int y = 3; y >= 0; y--) {
+        int i = 0;
+        boolean mergeSwitch = true;
+        do {
+            for (int x = 0; x < 4; x++) {
+                for (int y = 3; y >= 0; y--) {
 
-                for (Object[] entiTile : tileTable){
-                    Entity enti = (Entity) entiTile[0]; // Cast the object to Entity
-                    Tile tile = (Tile) entiTile[1];     // Cast the object to Tile
+                    for (Object[] entiTile : tileTable){
 
-                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+                        Entity enti = (Entity) entiTile[0]; // Cast the object to Entity
+                        Tile tile = (Tile) entiTile[1];     // Cast the object to Tile
 
-                        // If can move, then update tile object and entity
-                        while(canMove(entiTile, "down")){
-                            tile.setYPos(tile.getYPos()+1);
-                            enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+                        if ((tile.getYPos() == y) && (tile.getXPos() == x)){
+
+                            // If can move, then update tile object and entity
+                            while(canMove(entiTile, "down")){
+
+                                tile.setYPos(tile.getYPos()+1);
+                                enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
+                            }
                         }
-                        //canMerge(entiTile, "down");
-
-
                     }
                 }
             }
-        }
-        removeTiles();
+            // Only make the merge once, and make it between the loop which there iterate 2x
+            if (mergeSwitch){
+                // Somehow, the software needs to move all the tiles, then merge, then move again.
+                merge("down");
+            }
+            mergeSwitch = false;
+            i++;
+        } while (i<2);
 /*
         for (int y = 3; y >= 0; y--) {
             for (int x = 0; x < 4; x++) {
@@ -427,8 +435,6 @@ public class Game2048 extends GameApplication {
     }
 */
 
-
-    // TODO: I am in a loop
     protected boolean canMove(Object[] entiTile, String direction){
 
         Entity enti = (Entity) entiTile[0];
@@ -445,13 +451,11 @@ public class Game2048 extends GameApplication {
                 Entity checkEnti = (Entity) checkEntiTile[0];
                 Tile checkTile = (Tile) checkEntiTile[1];
 
-                if (tile.getYPos() - 1 == checkTile.getYPos() && tile.getXPos() == checkTile.getXPos())
-
+                if (tile.getYPos() - 1 == checkTile.getYPos() && tile.getXPos() == checkTile.getXPos()){
                     return false;
-
+                }
             }
             return true;
-
         }
 
 
@@ -472,22 +476,21 @@ public class Game2048 extends GameApplication {
                 }
             }
             return true;
-
         }
 
 
         if (direction.toLowerCase() == "down"){
 
+            // Cant go outside the grid
+            if (tile.getYPos()+1 == 4){
+                return false;
+            }
+
             for (Object[] checkEntiTile : tileTable){
                 Entity checkEnti = (Entity) checkEntiTile[0];
                 Tile checkTile = (Tile) checkEntiTile[1];
 
-                // Cant go outside the grid
-                if (tile.getYPos()+1 == 4){
-                    return false;
-                }
-
-                if (tile.getYPos()+1 == checkTile.getYPos() && tile.getXPos() == checkTile.getXPos()){
+                if (tile.getYPos() + 1 == checkTile.getYPos() && tile.getXPos() == checkTile.getXPos()){
                     return false;
                 }
             }
@@ -581,7 +584,7 @@ public class Game2048 extends GameApplication {
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
 
-                                    tempNewTile = new Tile(checkTile.getXPos(), checkTile.getYPos(), newValue);
+                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
                                     tempNewEntity = tempNewTile.spawnTile();
                                     tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
@@ -598,13 +601,59 @@ public class Game2048 extends GameApplication {
                 }
             }
         }
+
+
+        if (direction == "down"){
+            for (int x = 0; x < 4; x++) {
+                for (int y = 3; y >= 0; y--) {
+                    for (int i = 0; i < tileTable.size(); i++) {
+
+                        Object[] currentObj = tileTable.get(i);
+                        Entity enti = (Entity) currentObj[0];
+                        Tile tile = (Tile) currentObj[1];
+
+                        // Find a exissting tile
+                        if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                            for (int j = 0; j < tileTable.size(); j++) {
+                                Object[] checkObj = tileTable.get(j);
+                                Entity checkEnti = (Entity) checkObj[0];
+                                Tile checkTile = (Tile) checkObj[1];
+
+                                // This checks if the tile1 (above) is available, and they share the same X-value and number
+                                if (((tile.getYPos() - 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                    System.out.println("[TILE] " + tile.toString());
+                                    System.out.println("[CHECKING] " + checkTile.toString());
+                                    System.out.println();
+                                    System.out.println("Y = " +y);
+                                    y--;
+                                    System.out.println("y = " +y);
+
+                                    // merge the objects
+                                    int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
+
+                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                    tempNewEntity = tempNewTile.spawnTile();
+                                    tileTable.add(new Object[]{tempNewEntity, tempNewTile});
+
+
+                                    enti.removeFromWorld();
+                                    checkEnti.removeFromWorld();
+                                    tileTable.remove(currentObj);
+                                    tileTable.remove(checkObj);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
     }
 
-
-    public void removeTiles(){
-
-
-    }
 
     public void generateNewTile(){
         int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
