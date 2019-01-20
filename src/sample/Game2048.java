@@ -9,7 +9,6 @@ import com.almasb.fxgl.settings.GameSettings;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -55,6 +54,7 @@ public class Game2048 extends GameApplication {
         settings.setHeight(600);
         settings.setTitle("2048 Game");
         settings.setVersion("0.1");
+        settings.setAppIcon("ui/icons/logo.png");
     }
 
 
@@ -110,7 +110,6 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
-                generateNewTile(false);
             }
 
             @Override
@@ -128,7 +127,6 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
-                generateNewTile(false);
 
             }
 
@@ -147,7 +145,6 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
-                generateNewTile(false);
             }
 
             @Override
@@ -166,7 +163,6 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
-                generateNewTile(false);
             }
 
             @Override
@@ -416,6 +412,8 @@ public class Game2048 extends GameApplication {
     protected void merge(String direction){
 
 
+
+
         if (direction == "up"){
             for (int x = 0; x < 4; x++) {
                 for (int y = 0; y < 4; y++) {
@@ -588,6 +586,7 @@ public class Game2048 extends GameApplication {
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
 
+
                                     tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
                                     tempNewEntity = tempNewTile.spawnTile();
                                     tileTable.add(new Object[]{tempNewEntity, tempNewTile});
@@ -618,9 +617,7 @@ public class Game2048 extends GameApplication {
         int max = 1;
         if (isStarting) max = 2;
 
-        int rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-        int rndY = ThreadLocalRandom.current().nextInt(0, 1 + 1); // Dont wanna generate a tile under 1
-        int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
+
 
 
         // Construct used Coordinates
@@ -631,47 +628,59 @@ public class Game2048 extends GameApplication {
             bannedCoordinates.add(new Object[]{x,y});
         }
 
-        System.out.println("============================== BANNED TILE COORDINATES ==============================");
-        for (Object[] coord : bannedCoordinates){
-            int x = (int) coord[0];
-            int y = (int) coord[1];
-            System.out.println(" [ X="+x + ", Y=" + y + " ]");
-        }
-        System.out.println("============================== BANNED TILE COORDINATES ==============================");
+
 
 
 
 
         int usedX = 0;
         int usedY = 0;
-        // Generate until it finds a exact match
-        do {
-
-            for (Object[] usedCoord : bannedCoordinates){
-                usedX = (int) usedCoord[0];
-                usedY = (int) usedCoord[1];
-
-                if (usedX == rndX && usedY == rndY){
-                    rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-                    rndY = ThreadLocalRandom.current().nextInt(0, 1 + 1);
-                }
-            }
-
-            generatedRnd = new Object[]{rndX, rndY};
-
-        } while ((usedX == rndX) && (usedY == rndY));
+        int rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+        int rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+        System.out.println(" x er " + rndX);
+        System.out.println(" Y er " + rndY);
+        int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
 
 
-
+        Tile tile;
         // Iterate twice if the game is starting, otherwise just once
         for (int i = 0; i < max; i++) {
 
-            Tile tile = new Tile(rndX, rndY, rndValue);
+            // Generate until it finds a exact match
+            do {
+
+                for (Object[] usedCoord : bannedCoordinates){
+                    usedX = (int) usedCoord[0];
+                    usedY = (int) usedCoord[1];
+
+                    if (usedX == rndX && usedY == rndY){
+                        rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+                        rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+                    }
+                }
+
+                generatedRnd = new Object[]{rndX, rndY};
+
+            } while ((usedX == rndX) && (usedY == rndY));
+
+            rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+            rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+
+            System.out.println(" x er " + rndX);
+            System.out.println(" Y er " + rndY);
+
+            tile = new Tile(rndX, rndY, rndValue);
             tileEntity = tile.spawnTile();
             Object[] entiTileArr = new Object[]{tileEntity, tile};
             tileTable.add(entiTileArr);
 
         }
+
+
+
+
+
+
 
 
     }
