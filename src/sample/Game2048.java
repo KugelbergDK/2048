@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -110,6 +111,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
+                //generateNewTile(false);
             }
 
             @Override
@@ -127,6 +129,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
+                //generateNewTile(false);
 
             }
 
@@ -145,6 +148,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
+                //generateNewTile(false);
             }
 
             @Override
@@ -163,6 +167,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
+                //generateNewTile(false);
             }
 
             @Override
@@ -193,8 +198,7 @@ public class Game2048 extends GameApplication {
                         if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
                             // If can move, then update tile object and entity
-                            while(canMove(entiTile, "up")){
-
+                            while(canMove(tile.getXPos(), tile.getYPos()-1)){
                                 tile.setYPos(tile.getYPos()-1);
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                             }
@@ -229,8 +233,7 @@ public class Game2048 extends GameApplication {
                         if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
                             // If can move, then update tile object and entity
-                            while(canMove(entiTile, "right")){
-                                System.out.println("[MOVING] "+ tile.toString() + "+1");
+                            while(canMove(tile.getXPos()+1, tile.getYPos())){
                                 tile.setXPos(tile.getXPos()+1);
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                             }
@@ -265,7 +268,7 @@ public class Game2048 extends GameApplication {
                         if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
                             // If can move, then update tile object and entity
-                            while(canMove(entiTile, "down")){
+                            while(canMove(tile.getXPos(), tile.getYPos()+1)){
 
                                 tile.setYPos(tile.getYPos()+1);
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
@@ -302,7 +305,7 @@ public class Game2048 extends GameApplication {
                         if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
                             // If can move, then update tile object and entity
-                            while(canMove(entiTile, "left")){
+                            while(canMove(tile.getXPos()-1, tile.getYPos())){
                                 tile.setXPos(tile.getXPos()-1);
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                             }
@@ -321,7 +324,7 @@ public class Game2048 extends GameApplication {
 
     }
 
-
+/*
     protected boolean canMove(Object[] entiTile, String direction){
 
         Entity enti = (Entity) entiTile[0];
@@ -377,7 +380,7 @@ public class Game2048 extends GameApplication {
                 Entity checkEnti = (Entity) checkEntiTile[0];
                 Tile checkTile = (Tile) checkEntiTile[1];
 
-                if (tile.getYPos() + 1 == checkTile.getYPos() && tile.getXPos() == checkTile.getXPos()){
+                if (((tile.getYPos() + 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos())){
                     return false;
                 }
             }
@@ -408,10 +411,8 @@ public class Game2048 extends GameApplication {
 
 
     }
-
+*/
     protected void merge(String direction){
-
-
 
 
         if (direction == "up"){
@@ -431,14 +432,12 @@ public class Game2048 extends GameApplication {
                                 Entity checkEnti = (Entity) checkObj[0];
                                 Tile checkTile = (Tile) checkObj[1];
 
+
+                                // TODO: refactor, this is not a properly check if tile is available
+                                // Maybe do something like having a static array, there can give a arraylist of available locations
                                 // This checks if the tile1 (downunder) is available, and they share the same X-value and number
                                 if (((tile.getYPos() + 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    System.out.println("[TILE] " + tile.toString());
-                                    System.out.println("[CHECKING] " + checkTile.toString());
-                                    System.out.println();
-                                    System.out.println("X = " +x);
                                     y++;
-                                    System.out.println("X = " +x);
 
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
@@ -481,12 +480,8 @@ public class Game2048 extends GameApplication {
 
                                 // This checks if the tile-1 (left) is available, and they share the same Ypos and value
                                 if (((tile.getXPos() - 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    System.out.println("[TILE] " + tile.toString());
-                                    System.out.println("[CHECKING] " + checkTile.toString());
-                                    System.out.println();
-                                    System.out.println("X = " +x);
                                     x--;
-                                    System.out.println("X = " +x);
+
 
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
@@ -529,12 +524,8 @@ public class Game2048 extends GameApplication {
 
                                 // This checks if the tile1 (above) is available, and they share the same X-value and number
                                 if (((tile.getYPos() - 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    System.out.println("[TILE] " + tile.toString());
-                                    System.out.println("[CHECKING] " + checkTile.toString());
-                                    System.out.println();
-                                    System.out.println("Y = " +y);
                                     y--;
-                                    System.out.println("y = " +y);
+
 
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
@@ -576,13 +567,7 @@ public class Game2048 extends GameApplication {
 
                                 // This checks if the tile-1 (left) is available, and they share the same Ypos and value
                                 if (((tile.getXPos() + 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    System.out.println("[TILE] " + tile.toString());
-                                    System.out.println("[CHECKING] " + checkTile.toString());
-                                    System.out.println();
-                                    System.out.println("X = " +x);
                                     x++;
-                                    System.out.println("X = " +x);
-
                                     // merge the objects
                                     int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
 
@@ -610,71 +595,85 @@ public class Game2048 extends GameApplication {
     }
 
 
+    public boolean canMove(int toX, int toY){
+
+        if (toX == 4 || toX == -1) return false;
+
+        if (toY == 4 || toY == -1) return false;
+
+        // Iterate over all possible locations
+        for (Object[] obj : tileTable){
+            Tile tile = (Tile) obj[1];
+
+            // Check if there exist a tile at this location
+            if (tile.getXPos() == toX && tile.getYPos() == toY){
+                return false;
+            }
+
+        }
+
+        return true;
+
+    }
+
+    public ArrayList getAvailableSpots(){
+        ArrayList<Object[]> tilesAvailable = new ArrayList<>();
+        ArrayList<Object[]> tilesTaken = new ArrayList<>();
+        ArrayList<Object[]> xyToBeRemoved = new ArrayList<>();
+        tilesTaken.addAll(tileTable);
+
+        // Lets add all combinations to the array
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                tilesAvailable.add(new Object[]{x,y});
+            }
+        }
+
+        // Then we check if an existing tile matching with a available tile, then we will add it to a removeArray
+        for (Object[] taken : tilesTaken){
+            Tile tile = (Tile) taken[1];
+
+            for (Object[] available : tilesAvailable){
+                int x = (int) available[0];
+                int y = (int) available[1];
+
+                // If they match, remove the available tile from array
+                if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+                    xyToBeRemoved.add(available);
+                }
+            }
+
+        }
+
+        // Time to remove the objects from the original array
+        for (int i = 0; i < xyToBeRemoved.size(); i++) {
+            tilesAvailable.remove(xyToBeRemoved.get(i));
+        }
+
+
+
+        return tilesAvailable;
+
+    }
+
+
+
+
     public void generateNewTile(boolean isStarting){
 
-        ArrayList<Object[]> bannedCoordinates = new ArrayList<>();
-        Object[] generatedRnd;
-        int max = 1;
-        if (isStarting) max = 2;
+
+
+        Tile tile1 = new Tile(0,0,2);
+        tileEntity = tile1.spawnTile();
+        tileTable.add(new Object[]{tileEntity, tile1});
+
+        Tile tile2 = new Tile(1,0,2);
+        tileEntity = tile2.spawnTile();
+        tileTable.add(new Object[]{tileEntity, tile2});
 
 
 
 
-        // Construct used Coordinates
-        for (Object[] obj : tileTable) {
-            Tile tile = (Tile) obj[1];
-            int x = tile.getXPos();
-            int y = tile.getYPos();
-            bannedCoordinates.add(new Object[]{x,y});
-        }
-
-
-
-
-
-
-        int usedX = 0;
-        int usedY = 0;
-        int rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-        int rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-        System.out.println(" x er " + rndX);
-        System.out.println(" Y er " + rndY);
-        int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
-
-
-        Tile tile;
-        // Iterate twice if the game is starting, otherwise just once
-        for (int i = 0; i < max; i++) {
-
-            // Generate until it finds a exact match
-            do {
-
-                for (Object[] usedCoord : bannedCoordinates){
-                    usedX = (int) usedCoord[0];
-                    usedY = (int) usedCoord[1];
-
-                    if (usedX == rndX && usedY == rndY){
-                        rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-                        rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-                    }
-                }
-
-                generatedRnd = new Object[]{rndX, rndY};
-
-            } while ((usedX == rndX) && (usedY == rndY));
-
-            rndX = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-            rndY = ThreadLocalRandom.current().nextInt(0, 3 + 1);
-
-            System.out.println(" x er " + rndX);
-            System.out.println(" Y er " + rndY);
-
-            tile = new Tile(rndX, rndY, rndValue);
-            tileEntity = tile.spawnTile();
-            Object[] entiTileArr = new Object[]{tileEntity, tile};
-            tileTable.add(entiTileArr);
-
-        }
 
 
 
