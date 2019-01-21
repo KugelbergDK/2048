@@ -111,7 +111,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
-                //generateNewTile(false);
+                generateNewTile(false);
             }
 
             @Override
@@ -129,7 +129,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
-                //generateNewTile(false);
+                generateNewTile(false);
 
             }
 
@@ -148,7 +148,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
-                //generateNewTile(false);
+                generateNewTile(false);
             }
 
             @Override
@@ -167,7 +167,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
-                //generateNewTile(false);
+                generateNewTile(false);
             }
 
             @Override
@@ -616,7 +616,7 @@ public class Game2048 extends GameApplication {
 
     }
 
-    public ArrayList getAvailableSpots(){
+    public ArrayList<Object[]> getAvailableSpots(){
         ArrayList<Object[]> tilesAvailable = new ArrayList<>();
         ArrayList<Object[]> tilesTaken = new ArrayList<>();
         ArrayList<Object[]> xyToBeRemoved = new ArrayList<>();
@@ -661,22 +661,21 @@ public class Game2048 extends GameApplication {
 
     public void generateNewTile(boolean isStarting){
 
+        int max = 1;
+        if (isStarting) max = 2;
+        int rndValue = new Random().nextDouble() < 0.9 ? 2 : 4;
 
-
-        Tile tile1 = new Tile(0,0,2);
-        tileEntity = tile1.spawnTile();
-        tileTable.add(new Object[]{tileEntity, tile1});
-
-        Tile tile2 = new Tile(1,0,2);
-        tileEntity = tile2.spawnTile();
-        tileTable.add(new Object[]{tileEntity, tile2});
-
+        for (int i = 0; i < max; i++) {
+            int rndI = new Random().nextInt(getAvailableSpots().size());
+            Object[] rndObj = getAvailableSpots().get(rndI);
 
 
 
+            Tile tile = new Tile((int) rndObj[0], (int) rndObj[1], 2);
+            tileEntity = tile.spawnTile();
+            tileTable.add(new Object[]{tileEntity, tile});
 
-
-
+        }
 
 
 
