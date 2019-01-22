@@ -71,6 +71,9 @@ public class Score {
 
     public void setCurrentScore(int currentScore) {
         this.currentScore = currentScore;
+        if (this.currentScore > highScore){
+            this.highScore = this.currentScore;
+        }
     }
 
     public int getHighScore() {
