@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 
 public class Tile {
 
-    private PositionComponent position;
     protected Rectangle tileBoxRectBg;
     protected TileValue tv = new TileValue();
     protected int x;
