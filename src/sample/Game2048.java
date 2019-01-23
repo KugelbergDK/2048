@@ -11,9 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -36,6 +34,7 @@ public class Game2048 extends GameApplication {
     public Entity tileEntity = new Entity();
 
     public Object[] tempNewObject;
+
 
 
 
@@ -113,14 +112,15 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
+                getGameState().setValue("currentScoreValue", score.getCurrentScore());
+                getGameState().setValue("highestScoreValue", score.getHighScore());
 
             }
 
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+
 
             }
 
@@ -133,14 +133,15 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
+                getGameState().setValue("currentScoreValue", score.getCurrentScore());
+                getGameState().setValue("highestScoreValue", score.getHighScore());
 
             }
 
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+
 
             }
 
@@ -153,13 +154,14 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
+                getGameState().setValue("currentScoreValue", score.getCurrentScore());
+                getGameState().setValue("highestScoreValue", score.getHighScore());
             }
 
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+
 
 
             }
@@ -173,13 +175,14 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
+                getGameState().setValue("currentScoreValue", score.getCurrentScore());
+                getGameState().setValue("highestScoreValue", score.getHighScore());
             }
 
             @Override
             protected void onActionEnd() {
                 super.onActionEnd();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+
 
 
             }
@@ -203,6 +206,8 @@ public class Game2048 extends GameApplication {
                         Entity enti = (Entity) entiTile[0]; // Cast the object to Entity
                         Tile tile = (Tile) entiTile[1];     // Cast the object to Tile
 
+
+
                         if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
                             // If can move, then update tile object and entity
@@ -211,6 +216,7 @@ public class Game2048 extends GameApplication {
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                                 haveMoved = true;
                             }
+
                         }
                     }
                 }
@@ -219,7 +225,6 @@ public class Game2048 extends GameApplication {
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
                 merge("up");
-                haveMoved = true;
             }
             mergeSwitch = false;
             i++;
@@ -252,6 +257,7 @@ public class Game2048 extends GameApplication {
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                                 haveMoved = true;
                             }
+
                         }
                     }
                 }
@@ -260,7 +266,6 @@ public class Game2048 extends GameApplication {
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
                 merge("right");
-                haveMoved = true;
             }
             mergeSwitch = false;
             i++;
@@ -294,6 +299,8 @@ public class Game2048 extends GameApplication {
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                                 haveMoved = true;
                             }
+
+
                         }
                     }
                 }
@@ -302,7 +309,6 @@ public class Game2048 extends GameApplication {
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
                 merge("down");
-                haveMoved = true;
             }
             mergeSwitch = false;
             i++;
@@ -335,6 +341,8 @@ public class Game2048 extends GameApplication {
                                 enti.setPosition(tile.getUICoordinates()[0], tile.getUICoordinates()[1]);
                                 haveMoved = true;
                             }
+
+
                         }
                     }
                 }
@@ -343,7 +351,6 @@ public class Game2048 extends GameApplication {
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
                 merge("left");
-                haveMoved = true;
             }
             mergeSwitch = false;
             i++;
