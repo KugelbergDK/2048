@@ -11,8 +11,11 @@ import com.almasb.fxgl.time.TimerAction;
 import com.almasb.fxgl.ui.Position;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -200,6 +203,7 @@ public class Game2048 extends GameApplication {
                 moveLeft();
                 getGameState().setValue("currentScoreValue", score.getCurrentScore());
                 getGameState().setValue("highestScoreValue", score.getHighScore());
+                // 150 millis is because spawnTile is using 100 millis.
                 getMasterTimer().runOnceAfter(() -> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
@@ -216,6 +220,52 @@ public class Game2048 extends GameApplication {
         input.addAction(moveLeft, KeyCode.LEFT);
 
 
+    }
+
+    /**
+     * Background initialize
+     * I am using the original RGB color from the real game
+     */
+    protected void initBackground(){
+        // For the background
+        getGameScene().setBackgroundColor(Color.rgb(240, 240, 228));
+    }
+
+    /**
+     * Initialize the user interface.
+     */
+    @Override
+    protected void initUI(){
+
+        // Init logo
+        Logo logo = new Logo();
+
+        // Create new Score object
+        Score score = new Score();
+        // Initialize the currentScore
+        score.initCurrentScore();
+        score.initHighScore();
+
+        // Init board
+        Board board = new Board();
+
+        Text welcomeText = new Text("Press \"space\" to start the game!");
+        welcomeText.setFill(Color.web("#6E6E64"));
+        welcomeText.setStyle("-fx-font: 16px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        startGameText = Entities.builder().at(15,172).viewFromNode(welcomeText).buildAndAttach(getGameWorld());
+
+
+
+
+
+
+    }
+
+
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("currentScoreValue", 0);
+        vars.put("highestScoreValue", 0);
     }
 
     protected void moveUp(){
@@ -689,15 +739,50 @@ public class Game2048 extends GameApplication {
 
     public void gameOver(){
         System.out.println("REMOVING TILETABLE");
-        for (Object[] obj : tileTable){
-            Entity enti = (Entity) obj[0];
-            enti.removeFromWorld();
-        }
-        // Reset score
-        score.setCurrentScore(0);
-        getGameState().setValue("currentScoreValue", 0);
+/*
 
-        tileTable.clear();
+*/
+
+
+        Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(236,196,0,0.6));
+        gameOverRect.setViewOrder(100);
+
+        Text gameOverText = new Text("Game over... \nPress enter to play again");
+        gameOverText.setTextAlignment(TextAlignment.CENTER);
+        gameOverText.setStyle("-fx-font: 20px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        gameOverText.setFill(Color.WHITE);
+        gameOverText.setY(100);
+
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(gameOverRect, gameOverText);
+        Entity gameOver = Entities.builder().at(0,0)
+                .viewFromNode(stack)
+                .buildAndAttach(getGameWorld());
+
+
+        UserAction playAgain = new UserAction("play_again") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+
+                for (Object[] obj : tileTable){
+                    Entity enti = (Entity) obj[0];
+                    enti.removeFromWorld();
+                }
+
+                // Reset score
+                score.setCurrentScore(0);
+                getGameState().setValue("currentScoreValue", 0);
+
+                tileTable.clear();
+                gameOver.removeFromWorld();
+                generateNewTile(true);
+
+
+            }
+        };
+        getInput().addAction(playAgain, KeyCode.ENTER);
+
 
     }
 
@@ -781,53 +866,7 @@ public class Game2048 extends GameApplication {
 
     }
 
-    /**
-     * Background initialize
-     * I am using the original RGB color from the real game
-     */
-    protected void initBackground(){
-        // For the background
-        getGameScene().setBackgroundColor(Color.rgb(240, 240, 228));
-    }
 
-
-
-    /**
-     * Initialize the user interface.
-     */
-    @Override
-    protected void initUI(){
-
-        // Init logo
-        Logo logo = new Logo();
-
-        // Create new Score object
-        Score score = new Score();
-        // Initialize the currentScore
-        score.initCurrentScore();
-        score.initHighScore();
-
-        // Init board
-        Board board = new Board();
-
-        Text welcomeText = new Text("Press \"space\" to start the game!");
-        welcomeText.setFill(Color.web("#6E6E64"));
-        welcomeText.setStyle("-fx-font: 16px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-        startGameText = Entities.builder().at(15,172).viewFromNode(welcomeText).buildAndAttach(getGameWorld());
-
-
-
-
-
-
-    }
-
-
-    @Override
-    protected void initGameVars(Map<String, Object> vars) {
-        vars.put("currentScoreValue", 0);
-        vars.put("highestScoreValue", 0);
-    }
 
 
     public static void main(String[] args) {
