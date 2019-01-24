@@ -156,12 +156,9 @@ public class Game2048 extends GameApplication {
                 getGameState().setValue("highestScoreValue", score.getHighScore());
 
 
-                if (!haveRestartedGame) {
-                    System.out.println("Called");
-                    getMasterTimer().runOnceAfter(() -> {
-                        if (isGameOver()) gameOver();
-                    }, Duration.millis(150));
-                }
+                getMasterTimer().runOnceAfter(() -> {
+                    if (isGameOver()) gameOver();
+                }, Duration.millis(150));
 
 
 
@@ -188,12 +185,9 @@ public class Game2048 extends GameApplication {
                 getGameState().setValue("currentScoreValue", score.getCurrentScore());
                 getGameState().setValue("highestScoreValue", score.getHighScore());
 
-                if (!haveRestartedGame) {
-                    System.out.println("Called");
-                    getMasterTimer().runOnceAfter(() -> {
-                        if (isGameOver()) gameOver();
-                    }, Duration.millis(150));
-                }
+                getMasterTimer().runOnceAfter(() -> {
+                    if (isGameOver()) gameOver();
+                }, Duration.millis(150));
             }
 
 
@@ -218,12 +212,9 @@ public class Game2048 extends GameApplication {
                 getGameState().setValue("highestScoreValue", score.getHighScore());
 
 
-                if (!haveRestartedGame) {
-                    System.out.println("Called");
-                    getMasterTimer().runOnceAfter(() -> {
-                        if (isGameOver()) gameOver();
-                    }, Duration.millis(150));
-                }
+                getMasterTimer().runOnceAfter(() -> {
+                    if (isGameOver()) gameOver();
+                }, Duration.millis(150));
             }
 
             @Override
@@ -249,12 +240,9 @@ public class Game2048 extends GameApplication {
 
 
                 // 150 millis is because spawnTile is using 100 millis.
-                if (!haveRestartedGame) {
-                    System.out.println("Called");
-                    getMasterTimer().runOnceAfter(() -> {
-                        if (isGameOver()) gameOver();
-                    }, Duration.millis(150));
-                }
+                getMasterTimer().runOnceAfter(() -> {
+                    if (isGameOver()) gameOver();
+                }, Duration.millis(150));
             }
 
             @Override
@@ -779,7 +767,7 @@ public class Game2048 extends GameApplication {
 
     public boolean isGameOver(){
         System.out.println("tilesize: " + tileTable.size());
-        if (tileTable.size() == 16 && !canMerge()){
+        if (tileTable.size() == 16 && !canMerge() && !haveRestartedGame){
             return true;
         }
         return false;
