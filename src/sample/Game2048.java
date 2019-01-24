@@ -40,6 +40,9 @@ public class Game2048 extends GameApplication {
     public ArrayList<Object[]> objectsToBeRemoved = new ArrayList<>();
     public Entity tempNewEntity = new Entity();
     public Entity tileEntity = new Entity();
+    public Entity gameOver;
+    public boolean haveRestartedGame = false;
+
 
     public Object[] tempNewObject;
 
@@ -84,6 +87,7 @@ public class Game2048 extends GameApplication {
         Input input = getInput();
 
 
+
         UserAction startGame = new UserAction("start_game") {
             @Override
             protected void onActionBegin() {
@@ -93,10 +97,38 @@ public class Game2048 extends GameApplication {
                 startGameText.removeFromWorld();
                 generateNewTile(true);
 
-
             }
         };
         input.addAction(startGame, KeyCode.SPACE);
+
+        UserAction playAgain = new UserAction("play_again") {
+            @Override
+            protected void onActionBegin() {
+                super.onActionBegin();
+
+                for (Object[] obj : tileTable){
+                    Entity enti = (Entity) obj[0];
+                    enti.removeFromWorld();
+                }
+
+                // Reset score
+                score.setCurrentScore(0);
+                getGameState().setValue("currentScoreValue", 0);
+
+                tileTable.clear();
+                gameOver.removeFromWorld();
+                generateNewTile(true);
+
+
+                if (haveRestartedGame) haveRestartedGame = false;
+
+
+
+
+
+            }
+        };
+        input.addAction(playAgain, KeyCode.ENTER);
 
         UserAction info = new UserAction("info") {
             @Override
@@ -124,9 +156,12 @@ public class Game2048 extends GameApplication {
                 getGameState().setValue("highestScoreValue", score.getHighScore());
 
 
-                getMasterTimer().runOnceAfter(() -> {
-                    if (isGameOver()) gameOver();
-                }, Duration.millis(150));
+                if (!haveRestartedGame) {
+                    System.out.println("Called");
+                    getMasterTimer().runOnceAfter(() -> {
+                        if (isGameOver()) gameOver();
+                    }, Duration.millis(150));
+                }
 
 
 
@@ -153,9 +188,12 @@ public class Game2048 extends GameApplication {
                 getGameState().setValue("currentScoreValue", score.getCurrentScore());
                 getGameState().setValue("highestScoreValue", score.getHighScore());
 
-                getMasterTimer().runOnceAfter(() -> {
-                    if (isGameOver()) gameOver();
-                }, Duration.millis(150));
+                if (!haveRestartedGame) {
+                    System.out.println("Called");
+                    getMasterTimer().runOnceAfter(() -> {
+                        if (isGameOver()) gameOver();
+                    }, Duration.millis(150));
+                }
             }
 
 
@@ -178,9 +216,14 @@ public class Game2048 extends GameApplication {
                 moveDown();
                 getGameState().setValue("currentScoreValue", score.getCurrentScore());
                 getGameState().setValue("highestScoreValue", score.getHighScore());
-                getMasterTimer().runOnceAfter(() -> {
-                    if (isGameOver()) gameOver();
-                }, Duration.millis(150));
+
+
+                if (!haveRestartedGame) {
+                    System.out.println("Called");
+                    getMasterTimer().runOnceAfter(() -> {
+                        if (isGameOver()) gameOver();
+                    }, Duration.millis(150));
+                }
             }
 
             @Override
@@ -203,10 +246,15 @@ public class Game2048 extends GameApplication {
                 moveLeft();
                 getGameState().setValue("currentScoreValue", score.getCurrentScore());
                 getGameState().setValue("highestScoreValue", score.getHighScore());
+
+
                 // 150 millis is because spawnTile is using 100 millis.
-                getMasterTimer().runOnceAfter(() -> {
-                    if (isGameOver()) gameOver();
-                }, Duration.millis(150));
+                if (!haveRestartedGame) {
+                    System.out.println("Called");
+                    getMasterTimer().runOnceAfter(() -> {
+                        if (isGameOver()) gameOver();
+                    }, Duration.millis(150));
+                }
             }
 
             @Override
@@ -738,50 +786,22 @@ public class Game2048 extends GameApplication {
     }
 
     public void gameOver(){
-        System.out.println("REMOVING TILETABLE");
-/*
-
-*/
-
-
-        Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(236,196,0,0.6));
+        // Not yet, it is a check in initInput, so isGameOver isn't being called if the user tries to move a tile, when game is over.
+        haveRestartedGame = true;
+        Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(236,196,0,0.5));
         gameOverRect.setViewOrder(100);
 
         Text gameOverText = new Text("Game over... \nPress enter to play again");
         gameOverText.setTextAlignment(TextAlignment.CENTER);
-        gameOverText.setStyle("-fx-font: 20px bold; -fx-font-family: 'Arial Rounded MT Bold'");
+        gameOverText.setStyle("-fx-font: 26px bold; -fx-font-family: 'Arial Rounded MT Bold'");
         gameOverText.setFill(Color.WHITE);
-        gameOverText.setY(100);
 
         StackPane stack = new StackPane();
         stack.getChildren().addAll(gameOverRect, gameOverText);
-        Entity gameOver = Entities.builder().at(0,0)
+        gameOver = Entities.builder().at(0,0)
                 .viewFromNode(stack)
                 .buildAndAttach(getGameWorld());
 
-
-        UserAction playAgain = new UserAction("play_again") {
-            @Override
-            protected void onActionBegin() {
-                super.onActionBegin();
-
-                for (Object[] obj : tileTable){
-                    Entity enti = (Entity) obj[0];
-                    enti.removeFromWorld();
-                }
-
-                // Reset score
-                score.setCurrentScore(0);
-                getGameState().setValue("currentScoreValue", 0);
-
-                tileTable.clear();
-                gameOver.removeFromWorld();
-                generateNewTile(true);
-
-
-            }
-        };
-        getInput().addAction(playAgain, KeyCode.ENTER);
 
 
     }
