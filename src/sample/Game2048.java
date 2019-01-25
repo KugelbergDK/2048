@@ -42,6 +42,7 @@ public class Game2048 extends GameApplication {
     public Entity tileEntity = new Entity();
     public Entity gameOver;
     public boolean haveRestartedGame = false;
+    boolean haveMoved = false;
 
 
     public Object[] tempNewObject;
@@ -66,7 +67,7 @@ public class Game2048 extends GameApplication {
         settings.setWidth(360);
         settings.setHeight(600);
         settings.setTitle("2048 Game");
-        settings.setVersion("0.1");
+        settings.setVersion("1.0");
         settings.setAppIcon("ui/icons/logo.png");
     }
 
@@ -152,11 +153,9 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveUp();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+                updateScore();
+                getMasterTimer().runOnceAfter(()-> {
 
-
-                getMasterTimer().runOnceAfter(() -> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
 
@@ -164,14 +163,6 @@ public class Game2048 extends GameApplication {
 
             }
 
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-
-
-
-            }
 
         };
         input.addAction(moveUp, KeyCode.UP);
@@ -182,22 +173,13 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveRight();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+                updateScore();
+                getMasterTimer().runOnceAfter(()-> {
 
-                getMasterTimer().runOnceAfter(() -> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
 
-
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-
-
-            }
 
         };
         input.addAction(moveRight, KeyCode.RIGHT);
@@ -208,23 +190,13 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveDown();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+                updateScore();
+                getMasterTimer().runOnceAfter(()-> {
 
-
-                getMasterTimer().runOnceAfter(() -> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
 
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-
-
-
-            }
 
         };
         input.addAction(moveDown, KeyCode.DOWN);
@@ -235,23 +207,13 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 moveLeft();
-                getGameState().setValue("currentScoreValue", score.getCurrentScore());
-                getGameState().setValue("highestScoreValue", score.getHighScore());
+                updateScore();
+                getMasterTimer().runOnceAfter(()-> {
 
-
-                // 150 millis is because spawnTile is using 100 millis.
-                getMasterTimer().runOnceAfter(() -> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
 
-            @Override
-            protected void onActionEnd() {
-                super.onActionEnd();
-
-
-
-            }
         };
         input.addAction(moveLeft, KeyCode.LEFT);
 
@@ -305,13 +267,11 @@ public class Game2048 extends GameApplication {
     }
 
     protected void moveUp(){
-
-
-
         int i = 0;
         boolean mergeSwitch = true;
-        boolean genNewtileSwitch = false;
+        haveMoved = false;
         do {
+
             for (int x = 0; x < 4; x++) {
                 for (int y = 0; y < 4; y++) {
 
@@ -320,7 +280,7 @@ public class Game2048 extends GameApplication {
                         Entity enti = (Entity) entiTile[0]; // Cast the object to Entity
                         Tile tile = (Tile) entiTile[1];     // Cast the object to Tile
                         // Using this to see if the tile has been moved or not
-                        int oldTileY = tile.getYPos();
+
 
                         if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
@@ -330,7 +290,8 @@ public class Game2048 extends GameApplication {
 
                                 getMasterTimer().runAtInterval(() -> {
                                     enti.translateY(-19.25);
-                                }, Duration.millis(0.1), 4);
+                                }, Duration.millis(1), 4);
+                                haveMoved = true;
 
                             }
                         }
@@ -339,19 +300,17 @@ public class Game2048 extends GameApplication {
                 }
             }
             // Only make the merge once, and make it between the loop which there iterate 2x
-            if (mergeSwitch){
+            if (mergeSwitch) {
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
                 merge("up");
             }
-            if (genNewtileSwitch){
-                generateNewTile(false);
-            }
 
             mergeSwitch = false;
-            genNewtileSwitch = true;
+
             i++;
         } while (i<2);
 
+        if (haveMoved) generateNewTile(false);
 
 
     }
@@ -359,7 +318,7 @@ public class Game2048 extends GameApplication {
     protected void moveRight(){
         int i = 0;
         boolean mergeSwitch = true;
-        boolean genNewtileSwitch = false;
+        haveMoved = false;
         do {
             for (int y = 0; y < 4; y++) {
                 for (int x = 3; x >= 0; x--) {
@@ -377,7 +336,9 @@ public class Game2048 extends GameApplication {
 
                                 getMasterTimer().runAtInterval(() -> {
                                     enti.translateX(+19.25);
-                                }, Duration.millis(0.1), 4);
+                                }, Duration.millis(1), 4);
+
+                                haveMoved = true;
 
                             }
 
@@ -393,22 +354,19 @@ public class Game2048 extends GameApplication {
                 merge("right");
             }
 
-            if (genNewtileSwitch){
-                generateNewTile(false);
-            }
-
             mergeSwitch = false;
-            genNewtileSwitch = true;
 
             i++;
         } while (i<2);
+
+        if (haveMoved) generateNewTile(false);
     }
 
     protected void moveDown(){
 
         int i = 0;
         boolean mergeSwitch = true;
-        boolean genNewtileSwitch = false;
+        haveMoved = false;
         do {
             for (int x = 0; x < 4; x++) {
                 for (int y = 3; y >= 0; y--) {
@@ -426,7 +384,9 @@ public class Game2048 extends GameApplication {
 
                                 getMasterTimer().runAtInterval(() -> {
                                     enti.translateY(+19.25);
-                                }, Duration.millis(0.1), 4);
+                                }, Duration.millis(1), 4);
+
+                                haveMoved = true;
 
                             }
 
@@ -442,27 +402,24 @@ public class Game2048 extends GameApplication {
                 merge("down");
             }
 
-            if (genNewtileSwitch){
-                generateNewTile(false);
-            }
 
             mergeSwitch = false;
-            genNewtileSwitch = true;
             i++;
         } while (i<2);
+
+        if (haveMoved) generateNewTile(false);
 
 
 
 
     }
 
-
     protected void moveLeft(){
 
 
         int i = 0;
         boolean mergeSwitch = true;
-        boolean genNewtileSwitch = false;
+        haveMoved = false;
         do {
             for (int y = 0; y < 4; y++) {
                 for (int x = 0; x < 4; x++) {
@@ -480,7 +437,9 @@ public class Game2048 extends GameApplication {
 
                                 getMasterTimer().runAtInterval(() -> {
                                     enti.translateX(-19.25);
-                                }, Duration.millis(0.1), 4);
+                                }, Duration.millis(1), 4);
+
+                                haveMoved = true;
 
                             }
 
@@ -497,14 +456,11 @@ public class Game2048 extends GameApplication {
                 merge("left");
             }
 
-            if (genNewtileSwitch){
-                generateNewTile(false);
-            }
-
             mergeSwitch = false;
-            genNewtileSwitch = true;
             i++;
         } while (i<2);
+
+        if (haveMoved) generateNewTile(false);
 
 
     }
@@ -528,8 +484,6 @@ public class Game2048 extends GameApplication {
                 }
 
                 if (tileX.getXPos() + 1 == tileX1.getXPos() && tileX.getYPos() == tileX1.getYPos() && tileX.getTv().getValue() == tileX1.getTv().getValue()) {
-                    System.out.println("TRUE AT X");
-                    System.out.println(tileX.toString() + " AND " + tileX1.toString());
                     return true;
                 }
             }
@@ -548,8 +502,6 @@ public class Game2048 extends GameApplication {
                 }
 
                 if (tileY.getYPos()+1 == tileY1.getYPos() && tileY.getXPos() == tileY1.getXPos() && tileY.getTv().getValue() == tileY1.getTv().getValue()){
-                    System.out.println("TRUE AT Y");
-                    System.out.println(tileY.toString() + " AND " + tileY1.toString());
                     return true;
                 }
             }
@@ -598,6 +550,9 @@ public class Game2048 extends GameApplication {
                                     tileTable.remove(checkObj);
 
 
+                                    haveMoved = true;
+
+
                                 }
                             }
                         }
@@ -642,6 +597,8 @@ public class Game2048 extends GameApplication {
                                     checkEnti.removeFromWorld();
                                     tileTable.remove(currentObj);
                                     tileTable.remove(checkObj);
+
+                                    haveMoved = true;
 
                                 }
                             }
@@ -688,6 +645,8 @@ public class Game2048 extends GameApplication {
                                     tileTable.remove(currentObj);
                                     tileTable.remove(checkObj);
 
+                                    haveMoved = true;
+
                                 }
                             }
                         }
@@ -730,6 +689,8 @@ public class Game2048 extends GameApplication {
                                     tileTable.remove(currentObj);
                                     tileTable.remove(checkObj);
 
+                                    haveMoved = true;
+
                                 }
                             }
                         }
@@ -745,9 +706,7 @@ public class Game2048 extends GameApplication {
 
     public boolean canMove(int toX, int toY){
 
-
         if (toX == 4 || toX == -1) return false;
-
         if (toY == 4 || toY == -1) return false;
 
         // Iterate over all possible locations
@@ -766,11 +725,10 @@ public class Game2048 extends GameApplication {
     }
 
     public boolean isGameOver(){
-        System.out.println("tilesize: " + tileTable.size());
         if (tileTable.size() == 16 && !canMerge() && !haveRestartedGame){
             return true;
         }
-        return false;
+        return tileTable.stream().map(obj -> (Tile) obj[1]).anyMatch(tile -> tile.getTv().getValue() == 2048);
     }
 
     public void gameOver(){
@@ -831,17 +789,12 @@ public class Game2048 extends GameApplication {
             tilesAvailable.remove(xyToBeRemoved.get(i));
         }
 
-
-
         return tilesAvailable;
 
 
 
 
     }
-
-
-
 
     public void generateNewTile(boolean isStarting){
 
@@ -874,8 +827,10 @@ public class Game2048 extends GameApplication {
 
     }
 
-
-
+    public void updateScore(){
+        getGameState().setValue("currentScoreValue", score.getCurrentScore());
+        getGameState().setValue("highestScoreValue", score.getHighScore());
+    }
 
     public static void main(String[] args) {
         launch(args);
