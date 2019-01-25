@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Lucas Kugelberg
- * @version 0.1
+ * @version 1.0
  *
  */
 
