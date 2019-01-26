@@ -11,7 +11,7 @@ import javafx.scene.text.TextAlignment;
 import static sample.Game2048.CORNER_VALUE;
 
 /**
- * <p>This class is goind to be contrilling the scores.</p>
+ * <p>This class is going to be controlling the scores.</p>
  * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
  *
  *
