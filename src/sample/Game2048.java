@@ -19,20 +19,22 @@ import java.util.*;
 
 
 /**
+ *
+ * <p>
+ * This is the Main class. This is where the game starts.
+ *<p>
+ * The game 2048 is kinda like a strategy game. Join the numbers and get the tile of 2048.<br>
+ * <b>This is how it works:</b><br>
+ * You start the game and press space.<br>
+ * Then you use your arrows to move the tiles to the desired direction of your choice.<br>
+ * When you are moving, lets say a tile there hold a value of 2, is on the same path as another tile with the same value,<br>
+ * they will merge together as 1 tile. Now you score will update with a value of 4. Because that is the new value you just created.<br>
+ *<p>
+ * This is a very entertaining game, but also pretty difficult.
+ *</p>
+ *
  * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
  * @version 1.1
- *
- * This is the Main class. This is where the game starts.
- *
- * The game 2048 is kinda like a strategy game. Join the numbers and get the tile of 2048.
- * This is how it works:
- * You start the game and press space.
- * Then you use your arrows to move the tiles to the desired direction of your choice.
- * When you are moving, lets say a tile there hold a value of 2, is on the same path as another tile with the same value,
- * they will merge together as 1 tile. Now you score will update with a value of 4. Because that is the new value you just created.
- *
- * This is a very entertaining game, but also pretty difficult.
- *
  *
  *
  *
@@ -300,8 +302,9 @@ public class Game2048 extends GameApplication {
     /**
      * Move up method
      *
-     * <h3>Nested loop</h3>
+     * <h5>Nested loop</h5>
      * The iteration starts at the following coordinates:
+     * <ul>
      * <li>X=0, Y=0</li>
      * <li>X=0, Y=1</li>
      * <li>X=0, Y=2</li>
@@ -309,28 +312,33 @@ public class Game2048 extends GameApplication {
      * <li>X=1, Y=0</li>
      * <li>X=1, Y=1</li>
      * <li>X=1, Y=2</li>
+     *</ul>
+     * <p>
+     * This is because, it allows to move the tile upwards, without it needing to do it all over-again, until the tiles cannot move anymore.<br>
      *
-     * This is because, it allows to move the tile upwards, without it needing to do it all over-again, until the tiles cannot move anymore.
-     * In the XY nested iteration, there is also a for loop inside of that.
-     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.
-     * If there exist a tile at the given XY coordinate, verify if it can move up.
-     * - Update the tile objects values to the new coordinates
-     * - While it can move up, move the tile.
+     * In the XY nested iteration, there is also a for loop inside of that.<br>
+     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.<br>
+     * If there exist a tile at the given XY coordinate, verify if it can move up.<br>
+     * - Update the tile objects values to the new coordinates.<br>
+     * - While it can move up, move the tile.<br><br>
      *
-     * There is added a intervalTimer to the translateY. This is because it allows the tile to make a gliding effect.
-     * 1 tile width or height is 77px.
-     * Math: 77px / 4 = 19.25px
-     * Move 19.25px and do it max 4 times.
+     * There is added a intervalTimer to the translateY. This is because it allows the tile to make a gliding effect.<br>
+     * 1 tile width or height is 77px.<br>
+     * Math: 77px / 4 = 19.25px<br>
+     * Move 19.25px and do it max 4 times.<br>
+     * </p>
      *
      *
-     * <h3>Do while Loop</h3>
-     * First, iterate all of the tiles, XY values and move the tiles upwards.
+     * <h5>Do while Loop</h5>
+     * <p>
+     * First, iterate all of the tiles, XY values and move the tiles upwards.<br>
+     *
      * Then merge upwards.
      * Then iterate and move again.
+     *</p>
      *
-     *
-     * <h3>HaveMoved value</h3>
-     * If a tile has been move or merged, then spawn a new tile to the board.
+     * <h5>HaveMoved value</h5>
+     * <p>If a tile has been move or merged, then spawn a new tile to the board.</p>
      */
     protected void moveUp(){
         // Initialize iteration integer
@@ -392,8 +400,10 @@ public class Game2048 extends GameApplication {
     /**
      * Move Right method
      *
-     * <h3>Nested loop</h3>
+     * <h5>Nested loop</h5>
+     * <p>
      * The iteration starts at the following coordinates:
+     * <ul>
      * <li>X=3, Y=0</li>
      * <li>X=2, Y=0</li>
      * <li>X=1, Y=0</li>
@@ -401,25 +411,30 @@ public class Game2048 extends GameApplication {
      * <li>X=3, Y=1</li>
      * <li>X=2, Y=1</li>
      * <li>X=1, Y=1</li>
+     * </ul>
      *
-     * This is because, it allows to move the tile to the right, without it needing to do it all over-again, until the tiles cannot move anymore.
-     * In the XY nested iteration, there is also a for loop inside of that.
-     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.
-     * If there exist a tile at the given XY coordinate, verify if it can move to the right.
-     * - Update the tile objects values to the new coordinates
-     * - While it can move to the right, move the tile.
+     * This is because, it allows to move the tile to the right, without it needing to do it all over-again, until the tiles cannot move anymore.<br>
+     * In the XY nested iteration, there is also a for loop inside of that.<br>
+     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.<br>
+     * If there exist a tile at the given XY coordinate, verify if it can move to the right.<br>
+     * - Update the tile objects values to the new coordinates<br>
+     * - While it can move to the right, move the tile.<br><br>
      *
      * There is added a intervalTimer to the translateX. This is because it allows the tile to make a gliding effect.
+     * </p>
      *
      *
-     * <h3>Do while Loop</h3>
-     * First, iterate all of the tiles, XY values and move the tiles to the right.
-     * Then merge to the right.
+     * <h5>Do while Loop</h5>
+     * <p>
+     * First, iterate all of the tiles, XY values and move the tiles to the right.<br>
+     * Then merge to the right.<br>
      * Then iterate and move again.
+     *</p>
      *
-     *
-     * <h3>HaveMoved value</h3>
+     * <h5>HaveMoved value</h5>
+     * <p>
      * If a tile has been move or merged, then spawn a new tile to the board.
+     * </p>
      */
     protected void moveRight(){
         int i = 0;
@@ -471,8 +486,10 @@ public class Game2048 extends GameApplication {
     /**
      * Move Down method
      *
-     * <h3>Nested loop</h3>
+     * <h5>Nested loop</h5>
+     * <p>
      * The iteration starts at the following coordinates:
+     * <ul>
      * <li>X=0, Y=3</li>
      * <li>X=0, Y=2</li>
      * <li>X=0, Y=1</li>
@@ -480,25 +497,30 @@ public class Game2048 extends GameApplication {
      * <li>X=1, Y=3</li>
      * <li>X=1, Y=2</li>
      * <li>X=1, Y=1</li>
+     * </ul>
      *
-     * This is because, it allows to move the tile downwards, without it needing to do it all over-again, until the tiles cannot move anymore.
-     * In the XY nested iteration, there is also a for loop inside of that.
-     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.
-     * If there exist a tile at the given XY coordinate, verify if it can move down.
-     * - Update the tile objects values to the new coordinates
-     * - While it can move down, move the tile.
+     *
+     * This is because, it allows to move the tile downwards, without it needing to do it all over-again, until the tiles cannot move anymore.<br>
+     * In the XY nested iteration, there is also a for loop inside of that.<br>
+     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.<br>
+     * If there exist a tile at the given XY coordinate, verify if it can move down.<br>
+     * - Update the tile objects values to the new coordinates<br>
+     * - While it can move down, move the tile.<br><br>
      *
      * There is added a intervalTimer to the translateY. This is because it allows the tile to make a gliding effect.
+     * </p>
      *
      *
-     * <h3>Do while Loop</h3>
-     * First, iterate all of the tiles, XY values and move the tiles down.
-     * Then merge downwards.
+     * <h5>Do while Loop</h5>
+     * <p>
+     * First, iterate all of the tiles, XY values and move the tiles down.<br>
+     * Then merge downwards.<br>
      * Then iterate and move again.
+     *</p>
      *
+     * <h5>HaveMoved value</h5>
+     * <p>If a tile has been move or merged, then spawn a new tile to the board.</p>
      *
-     * <h3>HaveMoved value</h3>
-     * If a tile has been move or merged, then spawn a new tile to the board.
      */
     protected void moveDown(){
 
@@ -552,8 +574,10 @@ public class Game2048 extends GameApplication {
     /**
      * Move Left method
      *
-     * <h3>Nested loop</h3>
+     * <h5>Nested loop</h5>
+     * <p>
      * The iteration starts at the following coordinates:
+     * <ul>
      * <li>X=0, Y=0</li>
      * <li>X=1, Y=0</li>
      * <li>X=2, Y=0</li>
@@ -561,25 +585,30 @@ public class Game2048 extends GameApplication {
      * <li>X=1, Y=1</li>
      * <li>X=2, Y=1</li>
      * <li>X=3, Y=1</li>
-     *
-     * This is because, it allows to move the tile to the left, without it needing to do it all over-again, until the tiles cannot move anymore.
-     * In the XY nested iteration, there is also a for loop inside of that.
-     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.
-     * If there exist a tile at the given XY coordinate, verify if it can move to the left.
-     * - Update the tile objects values to the new coordinates
-     * - While it can move to the left, move the tile.
+     *</ul>
+     * This is because, it allows to move the tile to the left, without it needing to do it all over-again, until the tiles cannot move anymore.<br>
+     * In the XY nested iteration, there is also a for loop inside of that.<br>
+     * The nested-nested (inside of the XY nested loop) is a for loop to loop through all of the tiles there is active.<br>
+     * If there exist a tile at the given XY coordinate, verify if it can move to the left.<br>
+     * - Update the tile objects values to the new coordinates<br>
+     * - While it can move to the left, move the tile.<br><br>
      *
      * There is added a intervalTimer to the translateX. This is because it allows the tile to make a gliding effect.
+     * </p>
      *
      *
-     * <h3>Do while Loop</h3>
-     * First, iterate all of the tiles, XY values and move the tiles to the left.
-     * Then merge to the left.
+     * <h5>Do while Loop</h5>
+     * <p>
+     * First, iterate all of the tiles, XY values and move the tiles to the left.<br>
+     * Then merge to the left.<br>
      * Then iterate and move again.
+     * </p>
      *
      *
-     * <h3>HaveMoved value</h3>
+     * <h5>HaveMoved value</h5>
+     * <p>
      * If a tile has been move or merged, then spawn a new tile to the board.
+     * </p>
      */
     protected void moveLeft(){
 
@@ -676,14 +705,16 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveUp method.
-     * In this case, before it can merge, the tile below and its current tile needs to share the same value.
-     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is below, and share the same value.
-     * If it can be found, then begin to merge.
-     *
-     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
-     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * <p>
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveUp method.<br>
+     * In this case, before it can merge, the tile below and its current tile needs to share the same value.<br>
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is below, and share the same value.<br>
+     * If it can be found, then begin to merge.<br><br>
+     *<p>
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.<br>
+     * When the object[] has been created and added to tileTable, then remove the old objects.<br>
      * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     * </p>
      *
      */
     public void mergeUp(){
@@ -743,14 +774,17 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveRight method.
-     * In this case, before it can merge, the tile to the left and its current tile needs to share the same value.
-     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the left, and share the same value.
-     * If it can be found, then begin to merge.
+     * <p>
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveRight method.<br>
+     * In this case, before it can merge, the tile to the left and its current tile needs to share the same value.<br>
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the left, and share the same value.<br>
+     * If it can be found, then begin to merge.<br>
+     * <p>
      *
-     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
-     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.<br>
+     * When the object[] has been created and added to tileTable, then remove the old objects.<br>
      * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     * </p>
      *
      */
     public void mergeRight(){
@@ -810,14 +844,16 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveDown method.
-     * In this case, before it can merge, the tile above and its current tile needs to share the same value.
-     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is above, and share the same value.
-     * If it can be found, then begin to merge.
-     *
-     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
-     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * <p>
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveDown method.<br>
+     * In this case, before it can merge, the tile above and its current tile needs to share the same value.<br>
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is above, and share the same value.<br>
+     * If it can be found, then begin to merge.<br>
+     *<p>
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.<br>
+     * When the object[] has been created and added to tileTable, then remove the old objects.<br>
      * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     * </p>
      *
      */
     public void mergeDown(){
@@ -877,15 +913,16 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveLeft method.
-     * In this case, before it can merge, the tile to the right and its current tile needs to share the same value.
-     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the right, and share the same value.
-     * If it can be found, then begin to merge.
-     *
-     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
-     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * <p>
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveLeft method.<br>
+     * In this case, before it can merge, the tile to the right and its current tile needs to share the same value.<br>
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the right, and share the same value.<br>
+     * If it can be found, then begin to merge.<br>
+     *<p>
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.<br>
+     * When the object[] has been created and added to tileTable, then remove the old objects.<br>
      * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
-     *
+     *</p>
      */
     public void mergeLeft(){
         for (int y = 0; y < 4; y++) {
@@ -967,7 +1004,7 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * If board is filled with 16 tiles, it cannot merge anymore and the game hasn't been restarted yet.
+     * <p>If board is filled with 16 tiles, it cannot merge anymore and the game hasn't been restarted yet.</p>
      * @return true if the game is over and false if user can either move or merge.
      */
     public boolean isGameOver(){
@@ -978,7 +1015,7 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * Creates a overlay to tell the user, that the game is over.
+     * <p>Creates a overlay to tell the user, that the game is over.</p>
      */
     public void gameOver(){
         // Not yet, it is a check in initInput, so isGameOver isn't being called if the user tries to move a tile, when game is over.
@@ -998,12 +1035,13 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * First, transfer all of the active tiles to a takenTiles Array.
-     *
-     * Then add all of the tile-spots combinations to an array called tilesAvailable
-     * Then check if there already exist a tile in the available spot.
-     * If there exist a tile, then remove the available option and tell that this spot is already taken.
-     *
+     * <p>
+     * First, transfer all of the active tiles to a takenTiles Array.<br><br>
+     *<p>
+     * Then add all of the tile-spots combinations to an array called tilesAvailable<br>
+     * Then check if there already exist a tile in the available spot.<br>
+     * If there exist a tile, then remove the available option and tell that this spot is already taken.<br>
+     *</p>
      *
      * @return an ArrayList for available spots, where new tiles can be spawned to.
      */
@@ -1052,7 +1090,8 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * Generate a new tile object and Entity object, then add it to our tileTable ArrayList.
+     *
+     * <p>Generate a new tile object and Entity object, then add it to our tileTable ArrayList.</p>
      * @param isStarting Is this a starting call? Do it need to spawn 2 tiles or just 1. True for 2 tiles and false for 1 tile.
      */
     public void generateNewTile(boolean isStarting){
@@ -1087,7 +1126,7 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * Update the current and highscore
+     * <p>Update the current and highscore</p>
      */
     public void updateScore(){
         getGameState().setValue("currentScoreValue", score.getCurrentScore());
@@ -1095,7 +1134,7 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     * Launch the game.
+     * <p>Launch the game.</p>
      * @param args
      */
     public static void main(String[] args) {
