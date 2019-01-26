@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.Entity;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import static sample.Game2048.CORNER_VALUE;
 
@@ -78,8 +79,9 @@ public class Score {
 
         // Adding highest score value text to UI
         Text highestScoreValueText = new Text();
-        highestScoreValueText.setTranslateX(276);
+        highestScoreValueText.setTranslateX(268);
         highestScoreValueText.setTranslateY(68);
+        highestScoreValueText.setTextAlignment(TextAlignment.CENTER);
         highestScoreValueText.textProperty().bind(FXGL.getApp().getGameState().intProperty("highestScoreValue").asString());
         highestScoreValueText.setFill(Color.WHITE);
         highestScoreValueText.setStyle("-fx-font: 20px bold; -fx-font-family: 'Arial Rounded MT Bold'");
