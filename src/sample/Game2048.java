@@ -20,7 +20,7 @@ import java.util.*;
 
 /**
  * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
- * @version 1.0
+ * @version 1.1
  *
  * This is the Main class. This is where the game starts.
  *
@@ -92,7 +92,7 @@ public class Game2048 extends GameApplication {
         settings.setWidth(360);
         settings.setHeight(600);
         settings.setTitle("2048 Game");
-        settings.setVersion("1.0");
+        settings.setVersion("1.1");
         settings.setAppIcon("ui/icons/logo.png");
     }
 
