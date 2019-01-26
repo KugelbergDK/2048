@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -72,7 +73,7 @@ public class Game2048 extends GameApplication {
     /**
      * Our gameover Entity. This is used to tell the user, if the game is over.
      */
-    public Entity gameOver;
+    public Node gameOver;
     /**
      * This is used to verify if the game has been restarted. If the software did check, it will be calling gameOver every time a user press a arrow.
      */
@@ -146,8 +147,8 @@ public class Game2048 extends GameApplication {
 
                 // Empty our tileTable
                 tileTable.clear();
-                // Remove gameOver overlay from world
-                gameOver.removeFromWorld();
+                // Remove gameOver overlay from UI
+                getGameScene().removeUINode(gameOver);
                 // Generate 2 tiles, because this is the first spawn
                 generateNewTile(true);
 
@@ -990,9 +991,9 @@ public class Game2048 extends GameApplication {
 
         StackPane stack = new StackPane();
         stack.getChildren().addAll(gameOverRect, gameOverText);
-        gameOver = Entities.builder().at(0,0)
-                .viewFromNode(stack)
-                .buildAndAttach(getGameWorld());
+        gameOver = stack;
+        // add stackpane to UI.
+        getGameScene().addUINode(gameOver);
 
     }
 
