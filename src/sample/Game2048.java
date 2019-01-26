@@ -1,15 +1,11 @@
 package sample;
 
-import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
-import com.almasb.fxgl.time.TimerAction;
-import com.almasb.fxgl.ui.Position;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,7 +15,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -66,7 +61,6 @@ public class Game2048 extends GameApplication {
      * This is our score object. This holds all the UI the score boxes and also holds the values of our currentScore and the highestScore.
      */
     public Score score = new Score();
-
     /**
      * When er merge is happening, we need to store a temporary Entity.
      */
@@ -88,7 +82,6 @@ public class Game2048 extends GameApplication {
      */
     boolean haveMoved = false;
 
-
     /**
      * Initial settings for the game, such as width, height, version, appIcon and title.
      * @param settings the FXGL game setting
@@ -102,7 +95,6 @@ public class Game2048 extends GameApplication {
         settings.setAppIcon("ui/icons/logo.png");
     }
 
-
     /**
      * Initialize the game itself with a Override annotation.
      */
@@ -111,7 +103,6 @@ public class Game2048 extends GameApplication {
         initBackground();
 
     }
-
 
     /**
      * Initialize all of the inputs and assign them a action.
@@ -640,7 +631,6 @@ public class Game2048 extends GameApplication {
 
     }
 
-
     /**
      * Only called if there is no tiles available
      * @return true or false if tiles can merge
@@ -702,15 +692,15 @@ public class Game2048 extends GameApplication {
 
                     // Get the iterated object list
                     Object[] currentObj = tileTable.get(i);
-                    // Cast to Entity object
+                    // Cast index 0 to Entity object
                     Entity enti = (Entity) currentObj[0];
-                    // Cast to Tile object
+                    // Cast index 1 to Tile object
                     Tile tile = (Tile) currentObj[1];
 
                     // Find a existing tile
                     if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
-                        // Iterate every tile in tiletable to find a merge
+                        // Iterate every tile in tileTable to find a merge
                         for (int j = 0; j < tileTable.size(); j++) {
                             Object[] checkObj = tileTable.get(j);
                             Entity checkEnti = (Entity) checkObj[0];
@@ -719,25 +709,29 @@ public class Game2048 extends GameApplication {
 
                             // Just double checking
                             if (((tile.getYPos() + 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                // Now skip the tile, there is going to be merged's spot.
                                 y++;
 
                                 // merge the objects
                                 int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
                                 score.setCurrentScore(score.getCurrentScore()+newValue);
 
+                                // Make temporary Tile
                                 tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                // Make temporary Entity
                                 tempNewEntity = tempNewTile.spawnTile();
+                                // Add the objecs to the tileTable
                                 tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
-
+                                // Remove the old tiles from the world
                                 enti.removeFromWorld();
                                 checkEnti.removeFromWorld();
+                                // Remove the olds from tileTable
                                 tileTable.remove(currentObj);
                                 tileTable.remove(checkObj);
 
-
+                                // Tell program that a move has been made
                                 haveMoved = true;
-
 
                             }
                         }
@@ -763,13 +757,17 @@ public class Game2048 extends GameApplication {
             for (int x = 3; x >= 0; x--) {
                 for (int i = 0; i < tileTable.size(); i++) {
 
+                    // Get the iterated object list
                     Object[] currentObj = tileTable.get(i);
+                    // Cast index 0 to Entity object
                     Entity enti = (Entity) currentObj[0];
+                    // Cast index 1 to Tile object
                     Tile tile = (Tile) currentObj[1];
 
-                    // Find a exissting tile
+                    // Find a existing tile
                     if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
+                        // Iterate every tile in tileTable to find a merge
                         for (int j = 0; j < tileTable.size(); j++) {
                             Object[] checkObj = tileTable.get(j);
                             Entity checkEnti = (Entity) checkObj[0];
@@ -777,6 +775,7 @@ public class Game2048 extends GameApplication {
 
                             // This checks if the tile-1 (left) is available, and they share the same Ypos and value
                             if (((tile.getXPos() - 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                // Now skip the tile, there is going to be merged's spot.
                                 x--;
 
 
@@ -784,16 +783,21 @@ public class Game2048 extends GameApplication {
                                 int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
                                 score.setCurrentScore(score.getCurrentScore()+newValue);
 
+                                // Make temporary Tile
                                 tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                // Make temporary Entity
                                 tempNewEntity = tempNewTile.spawnTile();
+                                // Add the objects to tileTable
                                 tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
-
+                                // Remove the old tiles from the world
                                 enti.removeFromWorld();
                                 checkEnti.removeFromWorld();
+                                // Remove the old tiles from tileTable
                                 tileTable.remove(currentObj);
                                 tileTable.remove(checkObj);
 
+                                // Tell program that a move has been made
                                 haveMoved = true;
 
                             }
@@ -820,14 +824,17 @@ public class Game2048 extends GameApplication {
             for (int y = 3; y >= 0; y--) {
 
                 for (int i = 0; i < tileTable.size(); i++) {
-
+                    // Get the iterated object list
                     Object[] currentObj = tileTable.get(i);
+                    // Cast index 0 to Entity object
                     Entity enti = (Entity) currentObj[0];
+                    // Cast index 1 to Tile object
                     Tile tile = (Tile) currentObj[1];
 
-                    // Find a exissting tile
+                    // Find a existing tile
                     if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
+                        // Iterate every tile in tileTable to find a merge
                         for (int j = 0; j < tileTable.size(); j++) {
                             Object[] checkObj = tileTable.get(j);
                             Entity checkEnti = (Entity) checkObj[0];
@@ -835,6 +842,7 @@ public class Game2048 extends GameApplication {
 
                             // This checks if the tile1 (above) is available, and they share the same X-value and number
                             if (((tile.getYPos() - 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                // Now skip the tile, there is going to be merged's spot.
                                 y--;
 
 
@@ -842,16 +850,21 @@ public class Game2048 extends GameApplication {
                                 int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
                                 score.setCurrentScore(score.getCurrentScore()+newValue);
 
+                                // Make temporary tile
                                 tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                // Make temporary Entity
                                 tempNewEntity = tempNewTile.spawnTile();
+                                // Add the objects to to tileTable
                                 tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
-
+                                // Remove old tiles from the world
                                 enti.removeFromWorld();
                                 checkEnti.removeFromWorld();
+                                // Remove old tiles from tileTable
                                 tileTable.remove(currentObj);
                                 tileTable.remove(checkObj);
 
+                                // Tell program that a move has been made
                                 haveMoved = true;
 
                             }
@@ -878,35 +891,44 @@ public class Game2048 extends GameApplication {
             for (int x = 0; x < 4; x++) {
                 for (int i = 0; i < tileTable.size(); i++) {
 
+                    // Get the iterated object list
                     Object[] currentObj = tileTable.get(i);
+                    // Cast index 0 to Entity object
                     Entity enti = (Entity) currentObj[0];
+                    // Cast index 1 to Tile object
                     Tile tile = (Tile) currentObj[1];
 
-                    // Find a exissting tile
+                    // Find a existing tile
                     if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
+                        // Iterate every tile in tileTable to find a merge
                         for (int j = 0; j < tileTable.size(); j++) {
                             Object[] checkObj = tileTable.get(j);
                             Entity checkEnti = (Entity) checkObj[0];
                             Tile checkTile = (Tile) checkObj[1];
 
-                            // This checks if the tile-1 (left) is available, and they share the same Ypos and value
+                            // This checks if the tile+1 (right) is available, and they share the same Ypos and value
                             if (((tile.getXPos() + 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
                                 x++;
                                 // merge the objects
                                 int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
                                 score.setCurrentScore(score.getCurrentScore()+newValue);
 
+                                // Make temporary Tile
                                 tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                // Make temporary Entity
                                 tempNewEntity = tempNewTile.spawnTile();
+                                // Add the objects to tileTable
                                 tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
-
+                                // Remove old tiles from world
                                 enti.removeFromWorld();
                                 checkEnti.removeFromWorld();
+                                // Remove old tiles from tileTable
                                 tileTable.remove(currentObj);
                                 tileTable.remove(checkObj);
 
+                                // Tell program that a move has been made
                                 haveMoved = true;
 
                             }
@@ -916,8 +938,6 @@ public class Game2048 extends GameApplication {
             }
         }
     }
-
-
 
     /**
      *

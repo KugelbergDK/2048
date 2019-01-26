@@ -10,14 +10,36 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-
+/**
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
+ *
+ * This class is about creating a tile with XY values
+ * Besides that, this is where it converts the grid XY values to scene (UI) grid XY. So when i want a tile at 0,0, it will place the tile correctly at the right ui coordinates.
+ *
+ *
+ */
 
 public class Tile {
 
+    /**
+     * A Rectangle node for the empty tiles
+     */
     protected Rectangle tileBoxRectBg;
+    /**
+     * A TileValue object. Each tile has its own TileValue object.
+     */
     protected TileValue tv = new TileValue();
+    /**
+     * The game X value.
+     */
     protected int x;
+    /**
+     * The game Y value.
+     */
     protected int y;
+    /**
+     * A boolean if the tile is empty.
+     */
     protected boolean isEmpty;
 
 
@@ -28,8 +50,6 @@ public class Tile {
         // Add tile to arraylist
         this.isEmpty = true;
         tv.setValue(0);
-
-
 
     }
 
@@ -49,9 +69,13 @@ public class Tile {
         tv.setValue(newValue);
         System.out.println("New Tile created with values: " + this.toString());
 
-
     }
 
+    /**
+     * Converting game XY to User Interface XY value.
+     *
+     * @return A visible Entity tile on the gameboard.
+     */
     public Entity spawnTile(){
         int x = getUICoordinates()[0];
         int y = getUICoordinates()[1];
@@ -62,6 +86,10 @@ public class Tile {
                 .buildAndAttach();
     }
 
+    /**
+     *
+     * @return A stackpane, where it contains a colorful background and text corresponding to the tiles value.
+     */
     public Node createTile(){
 
         // Get bg and font color from value
@@ -82,7 +110,10 @@ public class Tile {
     }
 
 
-
+    /**
+     *
+     * @return A Rectangle there is empty - just a blank rectangle.
+     */
     public Node emptyTile(){
         this.tileBoxRectBg = new Rectangle(71, 71, Color.rgb(178,165, 149));
         this.tileBoxRectBg.setArcHeight(Game2048.CORNER_VALUE);
@@ -91,6 +122,15 @@ public class Tile {
 
     }
 
+    /**
+     * This method converts the Tile's XY values to the User Interface XY.
+     * Lets say we want to spawn a tile at 0,0 (On the game board). Without this method, it will be spawned at the top corner, that not what we want.
+     *
+     * When i designed the prototype in AdobeXD, I took the UI coordinates from there and inserted to the belonged tiles.
+     *
+     *
+     * @return XY coordinates to this tile. Index 0 is X-value, Index 1 is Y-value.
+     */
     public int[] getUICoordinates(){
 
         int x = this.x;
@@ -125,46 +165,79 @@ public class Tile {
         if (x == 2 && y == 3) uiCoordinates = new int[]{183-1, 455};
         if (x == 3 && y == 3) uiCoordinates = new int[]{260-1, 455};
 
-
-
-
         return uiCoordinates;
 
     }
 
+    /**
+     *
+     * @return A string where it outputs this tile's values.
+     */
     public String toString(){
         return "[X = " + this.x + ", Y = " + this.y +", VALUE = " + this.tv.value + "]";
     }
 
 
+    /**
+     *
+     * @return true if this tile is empty, false if it's not empty
+     */
     public boolean isEmpty() {
         return isEmpty;
     }
 
+    /**
+     *
+     * @param empty Set true if tile is empty, false if it is not.
+     */
     public void setEmpty(boolean empty) {
         isEmpty = empty;
     }
 
+    /**
+     *
+     * @return This tile's TileValue Object
+     */
     public TileValue getTv() {
         return tv;
     }
 
+    /**
+     *
+     * @param tv TileValue object.
+     */
     public void setTv(TileValue tv) {
         this.tv = tv;
     }
 
+    /**
+     *
+     * @return This X-Position
+     */
     public int getXPos() {
         return x;
     }
 
+    /**
+     *
+     * @param x Set new X-Position
+     */
     public void setXPos(int x) {
         this.x = x;
     }
 
+    /**
+     *
+     * @return This Y-Position
+     */
     public int getYPos() {
         return y;
     }
 
+    /**
+     *
+     * @param y Set new Y-Position
+     */
     public void setYPos(int y) {
         this.y = y;
     }

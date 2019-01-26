@@ -9,14 +9,39 @@ import javafx.scene.text.Text;
 
 import static sample.Game2048.CORNER_VALUE;
 
+/**
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
+ *
+ * This class is goind to be contrilling the scores.
+ *
+ *
+ */
 public class Score {
 
+    /**
+     * This is the current score.
+     * It is updated all the time
+     */
     protected int currentScore;
+    /**
+     * This sets the highest score in the current runtime.
+     * This is only updated if currentscore is higher than highscore
+     */
     protected int highScore;
+    /**
+     * A Rectangle node for the current score box
+     */
     protected Rectangle currentScoreRect;
+    /**
+     * A Rectangle node for the highscore box
+     */
     protected Rectangle highScoreRect;
 
 
+    /**
+     * This method initializes the current score and adds the rectangle to screen.
+     *
+     */
     public void initCurrentScore(){
         currentScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
         currentScoreRect.setArcHeight(CORNER_VALUE);
@@ -39,6 +64,9 @@ public class Score {
         Entity score = Entities.builder().at(256, 25).viewFromNode(currentScoreRect).buildAndAttach(FXGL.getApp().getGameWorld());
     }
 
+    /**
+     * This method initializes the highestscore and adds the box to the screen
+     */
     public void initHighScore(){
         highScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
         highScoreRect.setArcHeight(CORNER_VALUE);
@@ -60,15 +88,21 @@ public class Score {
         FXGL.getApp().getGameScene().addUINode(highestScoreValueText);
         Entity score = Entities.builder().at(153,25).viewFromNode(highScoreRect).buildAndAttach(FXGL.getApp().getGameWorld());
 
-
-
     }
 
 
+    /**
+     *
+     * @return The current score for the user
+     */
     public int getCurrentScore() {
         return currentScore;
     }
 
+    /**
+     *
+     * @param currentScore sets a new currentscore
+     */
     public void setCurrentScore(int currentScore) {
         this.currentScore = currentScore;
         if (this.currentScore > highScore){
@@ -76,10 +110,18 @@ public class Score {
         }
     }
 
+    /**
+     *
+     * @return The highest score in the current runtime
+     */
     public int getHighScore() {
         return highScore;
     }
 
+    /**
+     *
+     * @param highScore sets a new highscore
+     */
     public void setHighScore(int highScore) {
         this.highScore = highScore;
     }
