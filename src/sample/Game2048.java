@@ -19,7 +19,7 @@ import java.util.*;
 
 
 /**
- * @author Lucas Kugelberg
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
  * @version 1.0
  *
  * This is the Main class. This is where the game starts.
