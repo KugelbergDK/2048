@@ -978,7 +978,7 @@ public class Game2048 extends GameApplication {
     }
 
     /**
-     *
+     *<p>This method is returning a boolean if the spot, there is requested in params, is available.</p>
      * @param toX The wanted x value you want to move to.
      * @param toY The wanted y value you want to move to.
      * @return true if tile can move there and false is the spot has been taken.
