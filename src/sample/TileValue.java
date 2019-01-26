@@ -70,8 +70,9 @@ public class TileValue{
 
 
     /**
-     *
-     * @return The font size for the defined value.
+     * Fontsize is contained within a Hashmap, where the key is the tilevalue.
+     * So by inserting the tiles value, we can return the correct fontsize for this tule.
+     * @return A int to the font size.
      */
     public int getFontSize() {
         HashMap<Integer, Integer> fontSize = new HashMap<>();
@@ -93,7 +94,4 @@ public class TileValue{
 
     }
 
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-    }
 }
