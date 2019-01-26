@@ -983,11 +983,11 @@ public class Game2048 extends GameApplication {
     public void gameOver(){
         // Not yet, it is a check in initInput, so isGameOver isn't being called if the user tries to move a tile, when game is over.
         haveRestartedGame = true;
-        Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(255,255,255,0.8));
+        Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(236,196,0,0.8));
         Text gameOverText = new Text("Game over... \nPress enter to play again");
         gameOverText.setTextAlignment(TextAlignment.CENTER);
         gameOverText.setStyle("-fx-font: 26px bold; -fx-font-family: 'Arial Rounded MT Bold'");
-        gameOverText.setFill(Color.rgb(236,196,0));
+        gameOverText.setFill(Color.rgb(255,255,255));
 
         StackPane stack = new StackPane();
         stack.getChildren().addAll(gameOverRect, gameOverText);
