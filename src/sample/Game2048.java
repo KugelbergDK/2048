@@ -44,6 +44,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Game2048 extends GameApplication {
 
+    /**
+     * This is the arc value for rectangles.
+     */
     public final static int CORNER_VALUE = 10;
     /**
      * The game store its current tiles in a Arraylist object which there is called tileTable.
@@ -124,9 +127,10 @@ public class Game2048 extends GameApplication {
             @Override
             protected void onActionBegin() {
                 super.onActionBegin();
-                // tiles.clear();
+
                 // Remove start text
                 startGameText.removeFromWorld();
+                // Generate 2 tiles, because this is the first spawn
                 generateNewTile(true);
 
             }
@@ -139,6 +143,7 @@ public class Game2048 extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
 
+                // Remove all entity tiles from the world.
                 for (Object[] obj : tileTable){
                     Entity enti = (Entity) obj[0];
                     enti.removeFromWorld();
@@ -148,10 +153,14 @@ public class Game2048 extends GameApplication {
                 score.setCurrentScore(0);
                 getGameState().setValue("currentScoreValue", 0);
 
+                // Empty our tileTable
                 tileTable.clear();
+                // Remove gameOver overlay from world
                 gameOver.removeFromWorld();
+                // Generate 2 tiles, because this is the first spawn
                 generateNewTile(true);
 
+                // Revert boolean to false. We are starting a new game.
                 if (haveRestartedGame) haveRestartedGame = false;
 
             }
@@ -165,8 +174,10 @@ public class Game2048 extends GameApplication {
                 super.onActionBegin();
                 System.out.println("\n\n================ INFO ================");
                 System.out.println("[INFO] SIZE: " + tileTable.size());
+                // Iterate all tiles and print their values.
                 for (Object[] entiTile : tileTable){
                     Tile tile = (Tile) entiTile[1];
+                    // Printing values.
                     System.out.println(tile.toString());
                 }
 
@@ -183,8 +194,9 @@ public class Game2048 extends GameApplication {
                 super.onActionBegin();
                 moveUp();
                 updateScore();
-                getMasterTimer().runOnceAfter(()-> {
 
+                // Because spawnTile is about 100ms to spawn a tile and add it to tiletable, we need to slowdown the isGameOver check.
+                getMasterTimer().runOnceAfter(()-> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
 
@@ -200,8 +212,9 @@ public class Game2048 extends GameApplication {
                 super.onActionBegin();
                 moveRight();
                 updateScore();
-                getMasterTimer().runOnceAfter(()-> {
 
+                // Because spawnTile is about 100ms to spawn a tile and add it to tiletable, we need to slowdown the isGameOver check.
+                getMasterTimer().runOnceAfter(()-> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
@@ -218,8 +231,9 @@ public class Game2048 extends GameApplication {
                 super.onActionBegin();
                 moveDown();
                 updateScore();
-                getMasterTimer().runOnceAfter(()-> {
 
+                // Because spawnTile is about 100ms to spawn a tile and add it to tiletable, we need to slowdown the isGameOver check.
+                getMasterTimer().runOnceAfter(()-> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
@@ -234,8 +248,9 @@ public class Game2048 extends GameApplication {
                 super.onActionBegin();
                 moveLeft();
                 updateScore();
-                getMasterTimer().runOnceAfter(()-> {
 
+                // Because spawnTile is about 100ms to spawn a tile and add it to tiletable, we need to slowdown the isGameOver check.
+                getMasterTimer().runOnceAfter(()-> {
                     if (isGameOver()) gameOver();
                 }, Duration.millis(150));
             }
@@ -278,11 +293,6 @@ public class Game2048 extends GameApplication {
         welcomeText.setStyle("-fx-font: 16px bold; -fx-font-family: 'Arial Rounded MT Bold'");
         startGameText = Entities.builder().at(15,172).viewFromNode(welcomeText).buildAndAttach(getGameWorld());
 
-
-
-
-
-
     }
 
     /**
@@ -316,6 +326,9 @@ public class Game2048 extends GameApplication {
      * - While it can move up, move the tile.
      *
      * There is added a intervalTimer to the translateY. This is because it allows the tile to make a gliding effect.
+     * 1 tile width or height is 77px.
+     * Math: 77px / 4 = 19.25px
+     * Move 19.25px and do it max 4 times.
      *
      *
      * <h3>Do while Loop</h3>
@@ -328,27 +341,33 @@ public class Game2048 extends GameApplication {
      * If a tile has been move or merged, then spawn a new tile to the board.
      */
     protected void moveUp(){
+        // Initialize iteration integer
         int i = 0;
+        // Initialize the switcher
         boolean mergeSwitch = true;
+        // Assign the haveMoved check.
         haveMoved = false;
         do {
-
+            // Iterate over every tile combination
             for (int x = 0; x < 4; x++) {
                 for (int y = 0; y < 4; y++) {
-
+                    // Iterate over each tile in tileTable
                     for (Object[] entiTile : tileTable){
-
                         Entity enti = (Entity) entiTile[0]; // Cast the object to Entity
                         Tile tile = (Tile) entiTile[1];     // Cast the object to Tile
-                        // Using this to see if the tile has been moved or not
 
-
+                        // If tile match with the iterated XY value:
                         if ((tile.getYPos() == y) && (tile.getXPos() == x)){
 
                             // If can move, then update tile object and entity
                             while(canMove(tile.getXPos(), tile.getYPos()-1)){
                                 tile.setYPos(tile.getYPos()-1);
 
+                                /*
+                                Create sliding effect.
+                                Math: 77px / 4 = 19.25px
+                                Move 19.25px and do it max 4 times.
+                                */
                                 getMasterTimer().runAtInterval(() -> {
                                     enti.translateY(-19.25);
                                 }, Duration.millis(1), 4);
@@ -363,11 +382,13 @@ public class Game2048 extends GameApplication {
             // Only make the merge once, and make it between the loop which there iterate 2x
             if (mergeSwitch) {
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
-                merge("up");
+                mergeUp();
             }
 
+            // Switch the merge
             mergeSwitch = false;
 
+            // Add 1 to iteration integer.
             i++;
         } while (i<2);
 
@@ -444,7 +465,7 @@ public class Game2048 extends GameApplication {
             // Only make the merge once, and make it between the loop which there iterate 2x
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
-                merge("right");
+                mergeRight();
             }
 
             mergeSwitch = false;
@@ -524,7 +545,7 @@ public class Game2048 extends GameApplication {
             // Only make the merge once, and make it between the loop which there iterate 2x
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
-                merge("down");
+                mergeDown();
             }
 
 
@@ -533,9 +554,6 @@ public class Game2048 extends GameApplication {
         } while (i<2);
 
         if (haveMoved) generateNewTile(false);
-
-
-
 
     }
 
@@ -610,7 +628,7 @@ public class Game2048 extends GameApplication {
             // Only make the merge once, and make it between the loop which there iterate 2x
             if (mergeSwitch){
                 // Somehow, the software needs to move all the tiles, then merge, then move again.
-                merge("left");
+                mergeLeft();
             }
 
             mergeSwitch = false;
@@ -666,210 +684,240 @@ public class Game2048 extends GameApplication {
         return false;
     }
 
+    /**
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveUp method.
+     * In this case, before it can merge, the tile below and its current tile needs to share the same value.
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is below, and share the same value.
+     * If it can be found, then begin to merge.
+     *
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
+     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     *
+     */
+    public void mergeUp(){
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int i = 0; i < tileTable.size(); i++) {
+
+                    // Get the iterated object list
+                    Object[] currentObj = tileTable.get(i);
+                    // Cast to Entity object
+                    Entity enti = (Entity) currentObj[0];
+                    // Cast to Tile object
+                    Tile tile = (Tile) currentObj[1];
+
+                    // Find a existing tile
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                        // Iterate every tile in tiletable to find a merge
+                        for (int j = 0; j < tileTable.size(); j++) {
+                            Object[] checkObj = tileTable.get(j);
+                            Entity checkEnti = (Entity) checkObj[0];
+                            Tile checkTile = (Tile) checkObj[1];
+
+
+                            // Just double checking
+                            if (((tile.getYPos() + 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                y++;
+
+                                // merge the objects
+                                int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
+                                score.setCurrentScore(score.getCurrentScore()+newValue);
+
+                                tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                tempNewEntity = tempNewTile.spawnTile();
+                                tileTable.add(new Object[]{tempNewEntity, tempNewTile});
+
+
+                                enti.removeFromWorld();
+                                checkEnti.removeFromWorld();
+                                tileTable.remove(currentObj);
+                                tileTable.remove(checkObj);
+
+
+                                haveMoved = true;
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveRight method.
+     * In this case, before it can merge, the tile to the left and its current tile needs to share the same value.
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the left, and share the same value.
+     * If it can be found, then begin to merge.
      *
-     * For each direction, it haves a unique nested loop, exactly like the move methods.
-     * Inside every nested loop, it will verify if the tile, depending on the direction, has the same value as the one standing right next to the current tile.
-     * If they share the same value, the merge.
-     * Constrcut new Object[] and add it to tileTable Array.
-     * The Object[] contains, [0] which is an Entity object, and [1] is a Tile object.
-     * When added to tileTable, then remove the old tiles there have been merged.
-     * Then tell the game, that a move has been made.
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
+     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
      *
-     * @param direction the desired direction to merge - up, right, down or left.
      */
-    protected void merge(String direction){
+    public void mergeRight(){
+        for (int y = 0; y < 4; y++) {
+            for (int x = 3; x >= 0; x--) {
+                for (int i = 0; i < tileTable.size(); i++) {
 
-        if (direction == "up"){
-            for (int x = 0; x < 4; x++) {
-                for (int y = 0; y < 4; y++) {
-                    for (int i = 0; i < tileTable.size(); i++) {
+                    Object[] currentObj = tileTable.get(i);
+                    Entity enti = (Entity) currentObj[0];
+                    Tile tile = (Tile) currentObj[1];
 
-                        Object[] currentObj = tileTable.get(i);
-                        Entity enti = (Entity) currentObj[0];
-                        Tile tile = (Tile) currentObj[1];
+                    // Find a exissting tile
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
 
-                        // Find a exissting tile
-                        if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+                        for (int j = 0; j < tileTable.size(); j++) {
+                            Object[] checkObj = tileTable.get(j);
+                            Entity checkEnti = (Entity) checkObj[0];
+                            Tile checkTile = (Tile) checkObj[1];
 
-                            for (int j = 0; j < tileTable.size(); j++) {
-                                Object[] checkObj = tileTable.get(j);
-                                Entity checkEnti = (Entity) checkObj[0];
-                                Tile checkTile = (Tile) checkObj[1];
-
-
-                                // Just dobbelt checking
-                                if (((tile.getYPos() + 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    y++;
-
-                                    // merge the objects
-                                    int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
-                                    score.setCurrentScore(score.getCurrentScore()+newValue);
-
-                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
-                                    tempNewEntity = tempNewTile.spawnTile();
-                                    tileTable.add(new Object[]{tempNewEntity, tempNewTile});
+                            // This checks if the tile-1 (left) is available, and they share the same Ypos and value
+                            if (((tile.getXPos() - 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                x--;
 
 
-                                    enti.removeFromWorld();
-                                    checkEnti.removeFromWorld();
-                                    tileTable.remove(currentObj);
-                                    tileTable.remove(checkObj);
+                                // merge the objects
+                                int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
+                                score.setCurrentScore(score.getCurrentScore()+newValue);
+
+                                tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                tempNewEntity = tempNewTile.spawnTile();
+                                tileTable.add(new Object[]{tempNewEntity, tempNewTile});
 
 
-                                    haveMoved = true;
+                                enti.removeFromWorld();
+                                checkEnti.removeFromWorld();
+                                tileTable.remove(currentObj);
+                                tileTable.remove(checkObj);
 
+                                haveMoved = true;
 
-                                }
                             }
                         }
                     }
                 }
             }
         }
-
-
-        if (direction == "right"){
-            for (int y = 0; y < 4; y++) {
-                for (int x = 3; x >= 0; x--) {
-                    for (int i = 0; i < tileTable.size(); i++) {
-
-                        Object[] currentObj = tileTable.get(i);
-                        Entity enti = (Entity) currentObj[0];
-                        Tile tile = (Tile) currentObj[1];
-
-                        // Find a exissting tile
-                        if ((tile.getXPos() == x) && (tile.getYPos() == y)){
-
-                            for (int j = 0; j < tileTable.size(); j++) {
-                                Object[] checkObj = tileTable.get(j);
-                                Entity checkEnti = (Entity) checkObj[0];
-                                Tile checkTile = (Tile) checkObj[1];
-
-                                // This checks if the tile-1 (left) is available, and they share the same Ypos and value
-                                if (((tile.getXPos() - 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    x--;
-
-
-                                    // merge the objects
-                                    int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
-                                    score.setCurrentScore(score.getCurrentScore()+newValue);
-
-                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
-                                    tempNewEntity = tempNewTile.spawnTile();
-                                    tileTable.add(new Object[]{tempNewEntity, tempNewTile});
-
-
-                                    enti.removeFromWorld();
-                                    checkEnti.removeFromWorld();
-                                    tileTable.remove(currentObj);
-                                    tileTable.remove(checkObj);
-
-                                    haveMoved = true;
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-        if (direction == "down"){
-            for (int x = 0; x < 4; x++) {
-                for (int y = 3; y >= 0; y--) {
-                    for (int i = 0; i < tileTable.size(); i++) {
-
-                        Object[] currentObj = tileTable.get(i);
-                        Entity enti = (Entity) currentObj[0];
-                        Tile tile = (Tile) currentObj[1];
-
-                        // Find a exissting tile
-                        if ((tile.getXPos() == x) && (tile.getYPos() == y)){
-
-                            for (int j = 0; j < tileTable.size(); j++) {
-                                Object[] checkObj = tileTable.get(j);
-                                Entity checkEnti = (Entity) checkObj[0];
-                                Tile checkTile = (Tile) checkObj[1];
-
-                                // This checks if the tile1 (above) is available, and they share the same X-value and number
-                                if (((tile.getYPos() - 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    y--;
-
-
-                                    // merge the objects
-                                    int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
-                                    score.setCurrentScore(score.getCurrentScore()+newValue);
-
-                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
-                                    tempNewEntity = tempNewTile.spawnTile();
-                                    tileTable.add(new Object[]{tempNewEntity, tempNewTile});
-
-
-                                    enti.removeFromWorld();
-                                    checkEnti.removeFromWorld();
-                                    tileTable.remove(currentObj);
-                                    tileTable.remove(checkObj);
-
-                                    haveMoved = true;
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (direction == "left"){
-            for (int y = 0; y < 4; y++) {
-                for (int x = 0; x < 4; x++) {
-                    for (int i = 0; i < tileTable.size(); i++) {
-
-                        Object[] currentObj = tileTable.get(i);
-                        Entity enti = (Entity) currentObj[0];
-                        Tile tile = (Tile) currentObj[1];
-
-                        // Find a exissting tile
-                        if ((tile.getXPos() == x) && (tile.getYPos() == y)){
-
-                            for (int j = 0; j < tileTable.size(); j++) {
-                                Object[] checkObj = tileTable.get(j);
-                                Entity checkEnti = (Entity) checkObj[0];
-                                Tile checkTile = (Tile) checkObj[1];
-
-                                // This checks if the tile-1 (left) is available, and they share the same Ypos and value
-                                if (((tile.getXPos() + 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
-                                    x++;
-                                    // merge the objects
-                                    int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
-                                    score.setCurrentScore(score.getCurrentScore()+newValue);
-
-                                    tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
-                                    tempNewEntity = tempNewTile.spawnTile();
-                                    tileTable.add(new Object[]{tempNewEntity, tempNewTile});
-
-
-                                    enti.removeFromWorld();
-                                    checkEnti.removeFromWorld();
-                                    tileTable.remove(currentObj);
-                                    tileTable.remove(checkObj);
-
-                                    haveMoved = true;
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
-
     }
+
+    /**
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveDown method.
+     * In this case, before it can merge, the tile above and its current tile needs to share the same value.
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is above, and share the same value.
+     * If it can be found, then begin to merge.
+     *
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
+     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     *
+     */
+    public void mergeDown(){
+        for (int x = 0; x < 4; x++) {
+            for (int y = 3; y >= 0; y--) {
+
+                for (int i = 0; i < tileTable.size(); i++) {
+
+                    Object[] currentObj = tileTable.get(i);
+                    Entity enti = (Entity) currentObj[0];
+                    Tile tile = (Tile) currentObj[1];
+
+                    // Find a exissting tile
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                        for (int j = 0; j < tileTable.size(); j++) {
+                            Object[] checkObj = tileTable.get(j);
+                            Entity checkEnti = (Entity) checkObj[0];
+                            Tile checkTile = (Tile) checkObj[1];
+
+                            // This checks if the tile1 (above) is available, and they share the same X-value and number
+                            if (((tile.getYPos() - 1) == checkTile.getYPos()) && (tile.getXPos() == checkTile.getXPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                y--;
+
+
+                                // merge the objects
+                                int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
+                                score.setCurrentScore(score.getCurrentScore()+newValue);
+
+                                tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                tempNewEntity = tempNewTile.spawnTile();
+                                tileTable.add(new Object[]{tempNewEntity, tempNewTile});
+
+
+                                enti.removeFromWorld();
+                                checkEnti.removeFromWorld();
+                                tileTable.remove(currentObj);
+                                tileTable.remove(checkObj);
+
+                                haveMoved = true;
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * This method is using the same nested loop for searching for the correct tile, as it is using in the moveLeft method.
+     * In this case, before it can merge, the tile to the right and its current tile needs to share the same value.
+     * So the first 3 for loops is searching for the correct tile. Then the next loop(the 4th) is trying to find a tile, there is to the right, and share the same value.
+     * If it can be found, then begin to merge.
+     *
+     * First, it will make a temporary Object List. The element at index 0 is containing a new Entity, and the element at index 1 is containing the new Tile.
+     * When the object[] has been created and added to tileTable, then remove the old objects.
+     * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
+     *
+     */
+    public void mergeLeft(){
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+                for (int i = 0; i < tileTable.size(); i++) {
+
+                    Object[] currentObj = tileTable.get(i);
+                    Entity enti = (Entity) currentObj[0];
+                    Tile tile = (Tile) currentObj[1];
+
+                    // Find a exissting tile
+                    if ((tile.getXPos() == x) && (tile.getYPos() == y)){
+
+                        for (int j = 0; j < tileTable.size(); j++) {
+                            Object[] checkObj = tileTable.get(j);
+                            Entity checkEnti = (Entity) checkObj[0];
+                            Tile checkTile = (Tile) checkObj[1];
+
+                            // This checks if the tile-1 (left) is available, and they share the same Ypos and value
+                            if (((tile.getXPos() + 1) == checkTile.getXPos()) && (tile.getYPos() == checkTile.getYPos()) && (tile.getTv().getValue() == checkTile.getTv().getValue())){
+                                x++;
+                                // merge the objects
+                                int newValue = tile.getTv().getValue() + checkTile.getTv().getValue();
+                                score.setCurrentScore(score.getCurrentScore()+newValue);
+
+                                tempNewTile = new Tile(tile.getXPos(), tile.getYPos(), newValue);
+                                tempNewEntity = tempNewTile.spawnTile();
+                                tileTable.add(new Object[]{tempNewEntity, tempNewTile});
+
+
+                                enti.removeFromWorld();
+                                checkEnti.removeFromWorld();
+                                tileTable.remove(currentObj);
+                                tileTable.remove(checkObj);
+
+                                haveMoved = true;
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 
     /**
      *
