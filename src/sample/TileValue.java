@@ -12,6 +12,12 @@ public class TileValue{
 
 
     // Index 0: background color | Index 1: Font color
+    /**
+     * This is a static Color list.
+     * Index 0 is background color, Index 1 is the font color
+     *
+     * They are sorted by value. Lowest first.
+     */
     protected static Color tileColors[][] = {
             {Color.rgb(238,228,218), Color.rgb(119,110,101)},   // TileComponent with value 2
             {Color.rgb(236,224,200), Color.rgb(119,110,101)},   // TileComponent with value 4
@@ -25,16 +31,15 @@ public class TileValue{
             {Color.rgb(227,186,20), Color.rgb(255,255,255)},   // TileComponent with value 1024
             {Color.rgb(236,196,0), Color.rgb(255,255,255)},   // TileComponent with value 2048
     };
-
+    /**
+     * This tile value. This is always multiplied by 2 when changed.
+     */
     protected int value;
+    /**
+     * This tile fontsize. Fontsize is getting smaller when increasing value.
+     */
     protected int fontSize;
 
-
-
-    public TileValue(){
-
-
-    }
 
 
     public int getValue() {
