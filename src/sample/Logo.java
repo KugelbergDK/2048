@@ -10,9 +10,10 @@ import javafx.scene.text.Text;
 import static sample.Game2048.CORNER_VALUE;
 
 /**
+ * This class is used to construct the Logo.
  * @author Lucas Kugelberg (Github: github.com/KugelbergDK))
  *
- * This class is used to construct the Logo.
+ *
  *
  */
 public class Logo {

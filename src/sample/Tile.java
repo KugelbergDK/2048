@@ -11,12 +11,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 /**
- * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
- *
  *
  * <p>This class is about creating a tile with XY values<br>
  * Besides that, this is where it converts the grid XY values to scene (UI) grid XY. So when i want a tile at 0,0, it will place the tile correctly at the right ui coordinates.
  * </p>
+ *
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
+ *
+ *
+ *
  *
  *
  */

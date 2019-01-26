@@ -6,9 +6,10 @@ import java.util.HashMap;
 
 
 /**
+ * <p>This class primaryly contains the UI stuff to a tile. Like the background and font color and the font size.</p>
  * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
  *
- * This class primaryly contains the UI stuff to a tile. Like the background and font color and the font size.
+ *
  */
 public class TileValue{
 

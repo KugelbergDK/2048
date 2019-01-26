@@ -11,11 +11,13 @@ import javafx.scene.shape.Rectangle;
 import static sample.Game2048.CORNER_VALUE;
 
 /**
- * @author Lucas Kugelberg (Github: github.com/KugelbergDK))
- *
  * This class is used to construct the Board itself.
  * Background and empty tiles are set here.
  * This class also decides the grid size. Default is 4x4, see nested loop downbelow.
+ *
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK))
+ *
+
  *
  */
 
