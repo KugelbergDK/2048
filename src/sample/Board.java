@@ -25,13 +25,13 @@ public class Board {
     protected static Rectangle bg;
 
     /**
-     * The constrcuter is creating a new node(Rectangle) Entity with a brown background.
-     * The brown background has a size of 315x315.
+     * The constructer is creating a new node(Rectangle) Entity with a brown background.
+     * The brown background has a viewsize of 315x315 px.
      *
-     * When the brown background has been constrcuted, it is time to create empty tiles which there will be set up with a Gridpane.
+     * When the brown background has been constructed, it is time to create empty tiles which there will be set up with a Gridpane.
      * The empty tiles has a lighter brown than the board background. Please check the Prototype design to see example.
      *
-     * The grid is constrcuted with a nested loop, where the gridsize is 4x4.
+     * The grid is constructed with a nested loop, where the gridsize is 4x4.
      *
      */
     public Board(){
