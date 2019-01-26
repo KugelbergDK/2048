@@ -6,12 +6,12 @@ import java.util.HashMap;
 
 
 /**
- * This class holds the value, the valueColor for a tile
+ * @author Lucas Kugelberg (Github: github.com/KugelbergDK)
+ *
+ * This class primaryly contains the UI stuff to a tile. Like the background and font color and the font size.
  */
 public class TileValue{
 
-
-    // Index 0: background color | Index 1: Font color
     /**
      * This is a static Color list.
      * Index 0 is background color, Index 1 is the font color
@@ -41,11 +41,18 @@ public class TileValue{
     protected int fontSize;
 
 
-
+    /**
+     *
+     * @return This objects value.
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     *
+     * @param value Set a new value for this object. New should always be multiplied by 2.
+     */
     public void setValue(int value) {
         this.value = value;
     }
