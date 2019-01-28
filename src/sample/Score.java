@@ -24,27 +24,27 @@ public class Score {
      * This is the current score.
      * It is updated all the time
      */
-    protected int currentScore;
+    private int currentScore;
     /**
      * This sets the highest score in the current runtime.
      * This is only updated if currentscore is higher than highscore
      */
-    protected int highScore;
+    private int highScore;
     /**
      * A Rectangle node for the current score box
      */
-    protected Rectangle currentScoreRect;
+    private Rectangle currentScoreRect;
     /**
      * A Rectangle node for the highscore box
      */
-    protected Rectangle highScoreRect;
+    private Rectangle highScoreRect;
 
 
     /**
      * This method initializes the current score and adds the rectangle to screen.
      *
      */
-    public void initCurrentScore(){
+    protected void initCurrentScore(){
         currentScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
         currentScoreRect.setArcHeight(CORNER_VALUE);
         currentScoreRect.setArcWidth(CORNER_VALUE);
@@ -69,7 +69,7 @@ public class Score {
     /**
      * This method initializes the highestscore and adds the box to the screen
      */
-    public void initHighScore(){
+    protected void initHighScore(){
         highScoreRect = new Rectangle(78, 60, Color.rgb(158,146,130));
         highScoreRect.setArcHeight(CORNER_VALUE);
         highScoreRect.setArcWidth(CORNER_VALUE);
@@ -98,7 +98,7 @@ public class Score {
      *
      * @return The current score for the user
      */
-    public int getCurrentScore() {
+    protected int getCurrentScore() {
         return currentScore;
     }
 
@@ -106,7 +106,7 @@ public class Score {
      *
      * @param currentScore sets a new currentscore
      */
-    public void setCurrentScore(int currentScore) {
+    protected void setCurrentScore(int currentScore) {
         this.currentScore = currentScore;
         if (this.currentScore > highScore){
             this.highScore = this.currentScore;
@@ -117,7 +117,7 @@ public class Score {
      *
      * @return The highest score in the current runtime
      */
-    public int getHighScore() {
+    protected int getHighScore() {
         return highScore;
     }
 

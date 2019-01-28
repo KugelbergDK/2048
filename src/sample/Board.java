@@ -23,8 +23,8 @@ import static sample.Game2048.CORNER_VALUE;
 
 public class Board {
 
-    protected static GridPane grid = new GridPane();
-    protected static Rectangle bg;
+    private static GridPane grid = new GridPane();
+    private static Rectangle bg;
 
     /**
      * The constructer is creating a new node(Rectangle) Entity with a brown background.

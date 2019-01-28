@@ -18,15 +18,13 @@ import static sample.Game2048.CORNER_VALUE;
  */
 public class Logo {
 
-    Rectangle logoRect;
-
     /**
      * Create a new Rectangle node object with a given size and color.
      * Add som style to it and add it to the screen.
      */
     public Logo(){
 
-        logoRect = new Rectangle(113, 113, Color.rgb(236, 193, 0));
+        Rectangle logoRect = new Rectangle(113, 113, Color.rgb(236, 193, 0));
         logoRect.setArcHeight(CORNER_VALUE);
         logoRect.setArcWidth(CORNER_VALUE);
         logoRect.setX(15);

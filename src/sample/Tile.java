@@ -2,8 +2,6 @@ package sample;
 
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.entity.components.PositionComponent;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -29,11 +27,11 @@ public class Tile {
     /**
      * A Rectangle node for the empty tiles
      */
-    protected Rectangle tileBoxRectBg;
+    private Rectangle tileBoxRectBg;
     /**
      * A TileValue object. Each tile has its own TileValue object.
      */
-    protected TileValue tv = new TileValue();
+    private TileValue tv = new TileValue();
     /**
      * The game X value.
      */
@@ -45,7 +43,7 @@ public class Tile {
     /**
      * A boolean if the tile is empty.
      */
-    protected boolean isEmpty;
+    private boolean isEmpty;
 
 
     /**
@@ -81,7 +79,7 @@ public class Tile {
      *
      * @return A visible Entity tile on the gameboard.
      */
-    public Entity spawnTile(){
+    protected Entity spawnTile(){
         int x = getUICoordinates()[0];
         int y = getUICoordinates()[1];
 
@@ -95,7 +93,7 @@ public class Tile {
      *
      * @return A stackpane, where it contains a colorful background and text corresponding to the tiles value.
      */
-    public Node createTile(){
+    private Node createTile(){
 
         // Get bg and font color from value
         Rectangle tile = new Rectangle(71,71, tv.getColor()[0]);
@@ -119,7 +117,7 @@ public class Tile {
      *
      * @return A Rectangle there is empty - just a blank rectangle.
      */
-    public Node emptyTile(){
+    protected Node emptyTile(){
         this.tileBoxRectBg = new Rectangle(71, 71, Color.rgb(178,165, 149));
         this.tileBoxRectBg.setArcHeight(Game2048.CORNER_VALUE);
         this.tileBoxRectBg.setArcWidth(Game2048.CORNER_VALUE);
@@ -136,7 +134,7 @@ public class Tile {
      *
      * @return XY coordinates to this tile. Index 0 is X-value, Index 1 is Y-value.
      */
-    public int[] getUICoordinates(){
+    protected int[] getUICoordinates(){
 
         int x = this.x;
         int y = this.y;
@@ -203,7 +201,7 @@ public class Tile {
      *
      * @return This tile's TileValue Object
      */
-    public TileValue getTv() {
+    protected TileValue getTv() {
         return tv;
     }
 
@@ -219,7 +217,7 @@ public class Tile {
      *
      * @return This X-Position
      */
-    public int getXPos() {
+    protected int getXPos() {
         return x;
     }
 
@@ -227,7 +225,7 @@ public class Tile {
      *
      * @param x Set new X-Position
      */
-    public void setXPos(int x) {
+    protected void setXPos(int x) {
         this.x = x;
     }
 
@@ -235,7 +233,7 @@ public class Tile {
      *
      * @return This Y-Position
      */
-    public int getYPos() {
+    protected int getYPos() {
         return y;
     }
 
@@ -243,7 +241,7 @@ public class Tile {
      *
      * @param y Set new Y-Position
      */
-    public void setYPos(int y) {
+    protected void setYPos(int y) {
         this.y = y;
     }
 

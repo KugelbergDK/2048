@@ -45,13 +45,13 @@ public class Game2048 extends GameApplication {
     /**
      * This is the arc value for rectangles.
      */
-    public final static int CORNER_VALUE = 10;
+    final static int CORNER_VALUE = 10;
     /**
      * The game store its current tiles in a Arraylist object which there is called tileTable.
      * This tiletable is always updated. Whether the tile is added or merged, tileTable will always be a reference to see what tiles there is on the screen and being used.
      * The tileTable holds a list of objects. The first[0] element in the list is the Entity object and the second[1] holds the Tile object.
      */
-    public List<Object[]> tileTable = new ArrayList<>();
+    private List<Object[]> tileTable = new ArrayList<>();
     /**
      * This is the welcome text. On how to get started playing.
      */
@@ -59,7 +59,7 @@ public class Game2048 extends GameApplication {
     /**
      * When a merge is happening, there is need for a temporary tile there can hold the new value. TODO: Can maybe be optimized
      */
-    public Tile tempNewTile;
+    private Tile tempNewTile;
     /**
      * This is our score object. This holds all the UI the score boxes and also holds the values of our currentScore and the highestScore.
      */
@@ -67,23 +67,23 @@ public class Game2048 extends GameApplication {
     /**
      * When er merge is happening, we need to store a temporary Entity.
      */
-    public Entity tempNewEntity = new Entity();
+    private Entity tempNewEntity = new Entity();
     /**
      * the tileEntity is used whenever a spawn is happening.
      */
-    public Entity tileEntity = new Entity();
+    private Entity tileEntity = new Entity();
     /**
      * Our gameover Entity. This is used to tell the user, if the game is over.
      */
-    public Node gameOver;
+    private Node gameOver;
     /**
      * This is used to verify if the game has been restarted. If the software did check, it will be calling gameOver every time a user press a arrow.
      */
-    public boolean haveRestartedGame = false;
+    private boolean haveRestartedGame = false;
     /**
      * This boolean is used to verify if a tile has been move or merged. This is mostly used when we want to spawn a new tile.
      */
-    boolean haveMoved = false;
+    private boolean haveMoved = false;
 
     /**
      * Initial settings for the game, such as width, height, version, appIcon and title.
@@ -258,7 +258,7 @@ public class Game2048 extends GameApplication {
      * Background initialize
      * The background is the original RGB color from the real game.
      */
-    protected void initBackground(){
+    private void initBackground(){
         // Init background
         getGameScene().setBackgroundColor(Color.rgb(240, 240, 228));
     }
@@ -340,7 +340,7 @@ public class Game2048 extends GameApplication {
      * <h5>HaveMoved value</h5>
      * <p>If a tile has been move or merged, then spawn a new tile to the board.</p>
      */
-    protected void moveUp(){
+    private void moveUp(){
         // Initialize iteration integer
         int i = 0;
         // Initialize the switcher
@@ -436,7 +436,7 @@ public class Game2048 extends GameApplication {
      * If a tile has been move or merged, then spawn a new tile to the board.
      * </p>
      */
-    protected void moveRight(){
+    private void moveRight(){
         int i = 0;
         boolean mergeSwitch = true;
         haveMoved = false;
@@ -522,7 +522,7 @@ public class Game2048 extends GameApplication {
      * <p>If a tile has been move or merged, then spawn a new tile to the board.</p>
      *
      */
-    protected void moveDown(){
+    private void moveDown(){
 
         int i = 0;
         boolean mergeSwitch = true;
@@ -610,7 +610,7 @@ public class Game2048 extends GameApplication {
      * If a tile has been move or merged, then spawn a new tile to the board.
      * </p>
      */
-    protected void moveLeft(){
+    private void moveLeft(){
 
 
         int i = 0;
@@ -665,7 +665,7 @@ public class Game2048 extends GameApplication {
      * Only called if there is no tiles available
      * @return true or false if tiles can merge
      */
-    protected boolean canMerge(){
+    private boolean canMerge(){
 
         // Checking if tiles on X can merge
         for (Object[] objX : tileTable) {
@@ -717,7 +717,7 @@ public class Game2048 extends GameApplication {
      * </p>
      *
      */
-    public void mergeUp(){
+    private void mergeUp(){
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < tileTable.size(); i++) {
@@ -787,7 +787,7 @@ public class Game2048 extends GameApplication {
      * </p>
      *
      */
-    public void mergeRight(){
+    private void mergeRight(){
         for (int y = 0; y < 4; y++) {
             for (int x = 3; x >= 0; x--) {
                 for (int i = 0; i < tileTable.size(); i++) {
@@ -856,7 +856,7 @@ public class Game2048 extends GameApplication {
      * </p>
      *
      */
-    public void mergeDown(){
+    private void mergeDown(){
         for (int x = 0; x < 4; x++) {
             for (int y = 3; y >= 0; y--) {
 
@@ -924,7 +924,7 @@ public class Game2048 extends GameApplication {
      * Now, tell the global datafield, that a move has been made. Then it allows to generate a new tile.
      *</p>
      */
-    public void mergeLeft(){
+    private void mergeLeft(){
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
                 for (int i = 0; i < tileTable.size(); i++) {
@@ -983,7 +983,7 @@ public class Game2048 extends GameApplication {
      * @param toY The wanted y value you want to move to.
      * @return true if tile can move there and false is the spot has been taken.
      */
-    public boolean canMove(int toX, int toY){
+    private boolean canMove(int toX, int toY){
 
         if (toX == 4 || toX == -1) return false;
         if (toY == 4 || toY == -1) return false;
@@ -1007,7 +1007,7 @@ public class Game2048 extends GameApplication {
      * <p>If board is filled with 16 tiles, it cannot merge anymore and the game hasn't been restarted yet.</p>
      * @return true if the game is over and false if user can either move or merge.
      */
-    public boolean isGameOver(){
+    private boolean isGameOver(){
         if (tileTable.size() == 16 && !canMerge() && !haveRestartedGame){
             return true;
         }
@@ -1017,7 +1017,7 @@ public class Game2048 extends GameApplication {
     /**
      * <p>Creates a overlay to tell the user, that the game is over.</p>
      */
-    public void gameOver(){
+    private void gameOver(){
         // Not yet, it is a check in initInput, so isGameOver isn't being called if the user tries to move a tile, when game is over.
         haveRestartedGame = true;
         Rectangle gameOverRect = new Rectangle(360,600, Color.rgb(236,196,0,0.8));
@@ -1045,7 +1045,7 @@ public class Game2048 extends GameApplication {
      *
      * @return an ArrayList for available spots, where new tiles can be spawned to.
      */
-    public ArrayList<Object[]> getAvailableSpots(){
+    private ArrayList<Object[]> getAvailableSpots(){
         ArrayList<Object[]> tilesAvailable = new ArrayList<>();
         ArrayList<Object[]> tilesTaken = new ArrayList<>();
         ArrayList<Object[]> xyToBeRemoved = new ArrayList<>();
@@ -1128,7 +1128,7 @@ public class Game2048 extends GameApplication {
     /**
      * <p>Update the current and highscore</p>
      */
-    public void updateScore(){
+    private void updateScore(){
         getGameState().setValue("currentScoreValue", score.getCurrentScore());
         getGameState().setValue("highestScoreValue", score.getHighScore());
     }

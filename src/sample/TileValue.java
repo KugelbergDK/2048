@@ -19,7 +19,7 @@ public class TileValue{
      *
      * They are sorted by value. Lowest first.
      */
-    protected static Color tileColors[][] = {
+    private static Color tileColors[][] = {
             {Color.rgb(238,228,218), Color.rgb(119,110,101)},   // TileComponent with value 2
             {Color.rgb(236,224,200), Color.rgb(119,110,101)},   // TileComponent with value 4
             {Color.rgb(242,177,121), Color.rgb(255,255,255)},   // TileComponent with value 8
